@@ -18,9 +18,9 @@ export default class StartPage {
                     
 
                     <div class="message dot-message">
-                        <span></span>
-                        <span></span>
-                        <span></span>
+                        <span class="dot"></span>
+                        <span class="dot"></span>
+                        <span class="dot"></span>
                     </div>
 
                     ${this.generateMessage()}
@@ -106,10 +106,17 @@ export default class StartPage {
     }
     render() {
         this.rootEl.innerHTML = `
-            <div class="modal">
-                <div class="modal-content">
-                    <p>You have <span class="messages-amount">1</span> new message</p>
-                    <button class="open-msg-btn">Open</button>
+            <div class="desktop">
+                <img class="folder" src="../img/folder.png">
+                <img class="folder" src="../img/folder.png">
+                <img class="folder" src="../img/folder.png">
+                <img class="folder" src="../img/folder.png">
+
+                <div class="modal">
+                    <div class="modal-content">
+                        <p>You have <span class="messages-amount">1</span> new message</p>
+                        <button class="open-msg-btn">Open</button>
+                    </div>
                 </div>
             </div>
         `;
