@@ -8,10 +8,11 @@ export default class StartPage {
             <div class="chat">
                 <div class="chat-header">
                     <p>Funny DOM</p>
-                    <span class="status">online</span>
+                    <span class="status">online</span> 
                 </div>
 
-                <div class="chat-panel">
+                <div class="chat-body">
+                
                     <div class="message">
                         <p>Hello. Nice to meet you &#x1F60A</p>
                     </div>
@@ -25,14 +26,49 @@ export default class StartPage {
 
                     ${this.generateMessage()}
 
-                    <div class="message last">
+                    <!--<div class="message last">
                         <p>I want to offer you to go to a startling journey that will help you to test and improve your knowledge of how to interact with the Document Object Model.</p>
+                    </div>-->
+
+                    <div class="message">
+                        <p>I've heard you have been learning the Document Object Model for some time and now want to use this knowledge in practice.</p>
                     </div>
+
+                    <div class="message">
+                        <p>I'm going to an interesting but not an easy trip. So I just thought we can help each other.</p>
+                    </div>
+                    <div class="message">
+                        <p>You will get some experience and I will have an assistant.</p>
+                    </div>
+
+                    <div class="message">
+                        <p>What do you think about it?</p>
+                    </div>
+                </div>
+
+                <div class="chat-input">
+                    <div class="answer positive">
+                        <p>Gladly ^_^ When we go?</p>
+                    </div>
+                    <div class="answer negative">
+                        <p>Sorry, not this time</p>
+                    </div>
+                    <div class="answer positive">
+                        <p>Sounds interesting. I'll give you a chance :)</p>
+                    </div>
+
+                    <div class="msg-input">
+                        <span>Type a message...</span>
+                    </div>
+                    <svg class="send-icon" role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="sendIconTitle">
+                        <title id="sendIconTitle">Send</title>
+                        <polygon points="21.368 12.001 3 21.609 3 14 11 12 3 9.794 3 2.394"></polygon>
+                    </svg>
                 </div>
             </div>
         `;
         
-        this.chatPanel = document.querySelector('.chat-panel');
+        this.chatPanel = document.querySelector('.chat-body');
         this.dotMsg = this.chatPanel.querySelector('.dot-message');
 
         const messages = this.chatPanel.querySelectorAll('.message:not(.dot-message):not(:first-child)');
@@ -53,9 +89,12 @@ export default class StartPage {
         setTimeout(() => {
             if(index === messages.length - 1) {
                 this.displayDotMessage();
+                this.requireAnswer();
             }
 
             this.renderMsg();
+            this.scrollDownChat();
+            
         }, msgStarts[index] + 5500);
     }
 
@@ -68,12 +107,13 @@ export default class StartPage {
         this.chatPanel.insertBefore(msg, this.dotMsg);
     }
     countTime(msg) {
-        return Math.round(msg.children[0].textContent.length / 8) * 1000;
+        // 8
+        return Math.round(msg.children[0].textContent.length / 30) * 1000;
     }
 
     generateMessage() {
         // const usersTime = new Date().getHours();
-        const usersTime = 12;
+        const usersTime = 5;
 
         switch (true) {
             case usersTime >= 5 && usersTime <= 9:
@@ -91,7 +131,7 @@ export default class StartPage {
                         <p>Hope it is pretty well.</p>
                     </div>
                     <div class="message alt-message">
-                        <p>But if it is not I have a solution that will make you forget about bad weather</p>
+                        <p>But if it is not, I have a proposal that will make you forget about bad weather</p>
                     </div>
                 `;
             case usersTime >= 16 && usersTime <= 23:
@@ -104,6 +144,48 @@ export default class StartPage {
                 return `It's pretty late now. Hope you are not too tired to learn new things.`;
             };
     }
+
+    scrollDownChat() {
+        this.chatPanel.scrollTop = this.chatPanel.scrollHeight;
+    }
+
+    requireAnswer() {
+        const msgInput = document.querySelector('.msg-input');
+        msgInput.classList.add('require-interaction');
+
+        msgInput.addEventListener('click', (e) => this.renderAnswers(e));
+    }
+
+    renderAnswers(e) {
+        const chatInput = e.currentTarget.parentElement;
+        const height = getComputedStyle(chatInput).height;
+        const add = height === '60px' ? 100 : 200;
+        const newHeight = parseInt(height) + add + 'px';
+        chatInput.style.setProperty('height', newHeight);
+
+        document.querySelectorAll('.answer').forEach(ans => ans.style.display = "block");
+
+        this.chatPanel.style.height = `calc(100vh - ${newHeight}`;
+    }
+
+    typeMessage(e) {
+        let i = 0;
+        const speed = 50;
+        const text = e.currentTarget.children[0].textContent;
+
+        const msgInput = document.querySelector('.msg-input span');
+        msgInput.textContent = '';        
+
+        const typeWriter = () => {
+            if (i < text.length) {
+                msgInput.textContent += text.charAt(i);
+                i++;
+                setTimeout(typeWriter, speed);
+            }
+        }
+        typeWriter();
+    }
+
     render() {
         this.rootEl.innerHTML = `
             <div class="desktop">
@@ -123,5 +205,7 @@ export default class StartPage {
 
         document.querySelector('.open-msg-btn').addEventListener('click', () => this.startChat());
         this.startChat();
+
+        document.querySelectorAll('.answer').forEach(ans => ans.addEventListener('click', (e) => this.typeMessage(e)));
     }
 }
