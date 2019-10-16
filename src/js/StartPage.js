@@ -60,10 +60,12 @@ export default class StartPage {
                     <div class="msg-input">
                         <span>Type a message...</span>
                     </div>
-                    <svg class="send-icon" role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="sendIconTitle">
-                        <title id="sendIconTitle">Send</title>
-                        <polygon points="21.368 12.001 3 21.609 3 14 11 12 3 9.794 3 2.394"></polygon>
-                    </svg>
+                    
+                        <svg class="send-icon" role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="sendIconTitle">
+                            <title id="sendIconTitle">Send</title>
+                            <polygon points="21.368 12.001 3 21.609 3 14 11 12 3 9.794 3 2.394"></polygon>
+                        </svg>
+                    
                 </div>
             </div>
         `;
@@ -101,14 +103,17 @@ export default class StartPage {
     displayDotMessage() {
         this.dotMsg.style.display = getComputedStyle(this.dotMsg).display === 'none' ? 'block' : 'none';
     }
+
     renderMsg() {
         const msg = this.dotMsg.nextElementSibling;
         msg.style.display = 'block';
         this.chatPanel.insertBefore(msg, this.dotMsg);
     }
+
+    // counts time of pause between messages
     countTime(msg) {
         // 8
-        return Math.round(msg.children[0].textContent.length / 30) * 1000;
+        return Math.round(msg.children[0].textContent.length /40) * 1000;
     }
 
     generateMessage() {
@@ -141,10 +146,13 @@ export default class StartPage {
                     </div>
                 `;
             case usersTime >= 0 && usersTime <= 4:
-                return `It's pretty late now. Hope you are not too tired to learn new things.`;
+                return `<div class="message alt-message">
+                            <p>It's pretty late now. Hope you are not too tired to learn new things.</p>
+                        </div>`;
             };
     }
 
+    // scroll chat to its lowest point
     scrollDownChat() {
         this.chatPanel.scrollTop = this.chatPanel.scrollHeight;
     }
@@ -158,31 +166,46 @@ export default class StartPage {
 
     renderAnswers(e) {
         const chatInput = e.currentTarget.parentElement;
-        const height = getComputedStyle(chatInput).height;
-        const add = height === '60px' ? 100 : 200;
-        const newHeight = parseInt(height) + add + 'px';
-        chatInput.style.setProperty('height', newHeight);
 
-        document.querySelectorAll('.answer').forEach(ans => ans.style.display = "block");
+        // chat height is 60px or 70px (depends on window's width)
+        const height = parseInt(getComputedStyle(chatInput).height);
+        if(height < 160) {
+            const add = height === 60 ? 100 : 200;
+            const newHeight = parseInt(height) + add + 'px';
+            chatInput.style.setProperty('height', newHeight);
 
-        this.chatPanel.style.height = `calc(100vh - ${newHeight}`;
+            document.querySelectorAll('.answer').forEach(ans => ans.style.display = "block");
+
+            this.chatPanel.style.height = `calc(100vh - ${newHeight}`;
+        }
+        
+        
     }
 
+    // gives efect of typing answer
     typeMessage(e) {
         let i = 0;
         const speed = 50;
         const text = e.currentTarget.children[0].textContent;
 
         const msgInput = document.querySelector('.msg-input span');
-        msgInput.textContent = '';        
+        msgInput.textContent = '';
+        msgInput.style.color = 'rgba(255, 255, 255, 0.616)';
 
         const typeWriter = () => {
             if (i < text.length) {
-                msgInput.textContent += text.charAt(i);
-                i++;
-                setTimeout(typeWriter, speed);
+            // prevents from typing two messages at the same time
+            const reg = new RegExp(text.slice(0, i).replace(/[\.+*?(){}|^$]/g, "\\$&"));
+            const permision = reg.test(msgInput.textContent);
+
+                if(permision) {
+                    msgInput.textContent += text.charAt(i);
+                    i++;
+                    setTimeout(typeWriter, speed);
+                }
             }
-        }
+        };
+
         typeWriter();
     }
 
@@ -207,5 +230,7 @@ export default class StartPage {
         this.startChat();
 
         document.querySelectorAll('.answer').forEach(ans => ans.addEventListener('click', (e) => this.typeMessage(e)));
+        this.requireAnswer();
+        // this.renderAnswers();
     }
 }
