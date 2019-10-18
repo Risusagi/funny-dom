@@ -60,26 +60,32 @@ export default class StartPage {
                     <div class="msg-input">
                         <span>Type a message...</span>
                     </div>
-                    
+                    <a>
                         <svg class="send-icon" role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="sendIconTitle">
                             <title id="sendIconTitle">Send</title>
                             <polygon points="21.368 12.001 3 21.609 3 14 11 12 3 9.794 3 2.394"></polygon>
                         </svg>
-                    
+                    </a>
                 </div>
             </div>
         `;
         
-        this.chatPanel = document.querySelector('.chat-body');
-        this.dotMsg = this.chatPanel.querySelector('.dot-message');
+        this.chatBody = document.querySelector('.chat-body');
+        this.dotMsg = this.chatBody.querySelector('.dot-message');
 
-        const messages = this.chatPanel.querySelectorAll('.message:not(.dot-message):not(:first-child)');
+        const messages = this.chatBody.querySelectorAll('.message:not(.dot-message):not(:first-child)');
 
         setTimeout(() => this.displayDotMessage(), 2000);
 
-        for(let i = 0; i < messages.length; i++)  this.renderIntroduction(i, messages);    
+        for(let i = 0; i < messages.length; i++)  this.renderIntroduction(i, messages);  
+        
+        this.handleSend = (e) => this.handleMsgSend(e);
+        
+        document.querySelector('.chat-input a').addEventListener('click', this.handleSend);
+        document.querySelectorAll('.answer').forEach(ans => ans.addEventListener('click', (e) => this.typeMessage(e)));
     }
 
+    // renders messages with dot message between them
     renderIntroduction(index, messages) {
         const msgPeriods = [...messages].map(msg => this.countTime(msg));
         const msgStarts = [];
@@ -107,18 +113,16 @@ export default class StartPage {
     renderMsg() {
         const msg = this.dotMsg.nextElementSibling;
         msg.style.display = 'block';
-        this.chatPanel.insertBefore(msg, this.dotMsg);
+        this.chatBody.insertBefore(msg, this.dotMsg);
     }
 
     // counts time of pause between messages
     countTime(msg) {
-        // 8
-        return Math.round(msg.children[0].textContent.length /40) * 1000;
+        return Math.round(msg.children[0].textContent.length / 8) * 1000;
     }
 
     generateMessage() {
-        // const usersTime = new Date().getHours();
-        const usersTime = 5;
+        const usersTime = new Date().getHours();
 
         switch (true) {
             case usersTime >= 5 && usersTime <= 9:
@@ -154,7 +158,7 @@ export default class StartPage {
 
     // scroll chat to its lowest point
     scrollDownChat() {
-        this.chatPanel.scrollTop = this.chatPanel.scrollHeight;
+        this.chatBody.scrollTop = this.chatBody.scrollHeight;
     }
 
     requireAnswer() {
@@ -176,7 +180,7 @@ export default class StartPage {
 
             document.querySelectorAll('.answer').forEach(ans => ans.style.display = "block");
 
-            this.chatPanel.style.height = `calc(100vh - ${newHeight}`;
+            this.chatBody.style.height = `calc(100vh - ${newHeight}`;
         }
         
         
@@ -192,11 +196,15 @@ export default class StartPage {
         msgInput.textContent = '';
         msgInput.style.color = 'rgba(255, 255, 255, 0.616)';
 
+        this.usersAgreement = [...e.currentTarget.classList].includes('positive');
+        
+
         const typeWriter = () => {
             if (i < text.length) {
-            // prevents from typing two messages at the same time
-            const reg = new RegExp(text.slice(0, i).replace(/[\.+*?(){}|^$]/g, "\\$&"));
-            const permision = reg.test(msgInput.textContent);
+                
+                // prevents two messages being typed at the same time
+                const reg = new RegExp(text.slice(0, i).replace(/[\.+*?(){}|^$]/g, "\\$&"));
+                const permision = reg.test(msgInput.textContent);
 
                 if(permision) {
                     msgInput.textContent += text.charAt(i);
@@ -207,6 +215,27 @@ export default class StartPage {
         };
 
         typeWriter();
+    }
+
+    // renders new page if answer is positive and renders regret message if not
+    handleMsgSend(e) {
+        if (this.usersAgreement) {
+            e.currentTarget.href = 'taskTemplate.html';
+        } else {
+            const regretMsg = document.createElement('div');
+            regretMsg.className = 'message';
+            regretMsg.innerHTML = `<p>Oh, in this case I'll not waste your time any more. Have a nice day</p>`;
+            regretMsg.style.display = 'block';
+
+            const sendBtn = e.currentTarget;
+
+            setTimeout(() => this.displayDotMessage(), 800);
+            setTimeout(() => {
+                this.displayDotMessage();
+                this.chatBody.appendChild(regretMsg);
+                sendBtn.removeEventListener('click', this.handleSend);
+            }, 800 + this.countTime(regretMsg));
+        }
     }
 
     render() {
@@ -227,10 +256,5 @@ export default class StartPage {
         `;
 
         document.querySelector('.open-msg-btn').addEventListener('click', () => this.startChat());
-        this.startChat();
-
-        document.querySelectorAll('.answer').forEach(ans => ans.addEventListener('click', (e) => this.typeMessage(e)));
-        this.requireAnswer();
-        // this.renderAnswers();
     }
 }

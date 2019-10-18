@@ -86,8 +86,6 @@ $background: rgb(27, 38, 41);
 
 .chat > * {
     background-color: $background;
-    // background-color: rgb(27, 38, 41);
-    // min-height: 100vh;
 }
 
 .chat-header {
@@ -303,17 +301,3 @@ svg.send-icon {
         max-width: 55%;
     }
 }
-
-// .logo {
-//     width: 45px;
-//     height: 45px;
-//     overflow: hidden;
-//     position: relative;
-//     left: 40vw;
-//     top: -45px;
-//     // border-radius: 50%;
-//     // transform: translateX(-50%);
-//     img {
-//         height: 100%;
-//     }
-// }
