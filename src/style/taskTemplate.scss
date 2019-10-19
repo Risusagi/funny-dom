@@ -1,0 +1,92 @@
+@import './modern-normalize.css';
+
+
+$shadow: rgb(138, 212, 200);
+$panel-color: rgb(0, 24, 32);
+
+* {
+    font-family: 'Asap', Arial, sans-serif;
+}
+body {
+    min-height: 100vh;
+}
+
+iframe {
+    width: 100%;
+    height: 50vh;
+}
+
+.task-panel {
+    background-color: rgb(0, 24, 32);
+    color: white;
+    min-height: 50vh;
+    padding: 15px 10px;
+    letter-spacing: 1px;
+    margin-top: -3px;
+}
+
+h1 {
+    margin: 0;
+    text-align: center;
+    color: $panel-color;
+    text-transform: uppercase;
+    text-shadow: 1px 1px 10px $shadow,
+                -1px 1px 10px $shadow,
+                1px -1px 10px $shadow,
+                -1px -1px 10px $shadow;
+    letter-spacing: 2px;
+    float: right;
+    font-size: 18px;
+}
+
+.task-title {
+    color: $panel-color;
+    text-shadow: 1px 1px 1px $shadow,
+                -1px 1px 1px $shadow,
+                1px -1px 1px $shadow,
+                -1px -1px 1px $shadow;
+    padding-top: 30px;
+}
+
+h3 {
+    color: rgb(200, 199, 209);
+}
+ol.task-list {
+    line-height: 1.5em;
+    list-style-position: inside;
+    padding-left: 10px;
+    li {
+        color: rgb(200, 199, 209);
+    }
+}
+
+
+
+@media (min-width: 316px) {
+    .task-panel {
+        padding: 15px 20px;
+    }
+}
+@media (min-width: 501px) {
+    .task-panel {
+        padding: 15px 25px;
+    }
+    .task-title {
+        padding-top: 0px;
+    }
+    ol.task-list {
+        padding-left: 25px;
+    }
+}
+@media (min-width: 897px) {
+    iframe {
+        width: 45vw;
+        float: left;
+        height: 100vh;
+    }
+    .task-panel {
+        width: 55vw;
+        float: right;
+        height: 100vh;
+    }
+}
