@@ -1,5 +1,7 @@
 @import './modern-normalize.css';
-
+@import '../js/codemirror/lib/codemirror.css';
+@import '../js/codemirror/theme/cobalt.css';
+@import '../js/codemirror/addon/scroll/simplescrollbars.css';
 
 $shadow: rgb(138, 212, 200);
 $panel-color: rgb(0, 24, 32);
@@ -23,6 +25,11 @@ iframe {
     padding: 15px 10px;
     letter-spacing: 1px;
     margin-top: -3px;
+    &::after {
+        content: "";
+        display: table;
+        clear: both;
+    }
 }
 
 h1 {
@@ -60,8 +67,38 @@ ol.task-list {
     }
 }
 
+.run-code-btn,
+.next-task-btn {
+    $border-color: rgb(12, 42, 99);
+    width: 80px;
+    height: 40px;
+    margin-top: 7px;
+    background-color: transparent;
+    border: 1px solid $border-color;
+    color: white;
+    border-radius: 5px;
+    transition: all .5s;
+    float: right;
+    &:hover {
+        box-shadow: 0 0 10px 1px $border-color;
+        cursor: pointer;
+    }
+    &:focus {
+        outline: 0;
+    }
+}
 
+.next-task-btn {
+    margin-left: 6px;
+    margin-top: 16px;
+}
 
+@media (min-width: 205px) {
+    .run-code-btn,
+    .next-task-btn {
+        margin-top: 24px;
+    }
+}
 @media (min-width: 316px) {
     .task-panel {
         padding: 15px 20px;
