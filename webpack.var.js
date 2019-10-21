@@ -1,1 +1,1 @@
-module.exports = ['taskTemplate'];
+module.exports = ['taskTemplate', 'goodMorning'];
