@@ -5,6 +5,7 @@
 
 $shadow: rgb(138, 212, 200);
 $panel-color: rgb(0, 24, 32);
+$text-color: rgb(200, 199, 209);
 
 * {
     font-family: 'Asap', Arial, sans-serif;
@@ -35,7 +36,20 @@ body {
 
 .hint {
     height: .95em;
+    &:hover {
+        cursor: pointer;
+    }
 }
+
+button {
+    &:focus {
+        outline: 0;
+    }
+    &:hover {
+        cursor: pointer;
+    }
+}
+
 
 iframe {
     width: 100%;
@@ -45,7 +59,7 @@ iframe {
 
 .task-panel {
     background-color: rgb(0, 24, 32);
-    color: white;
+    color: $text-color;
     min-height: 50vh;
     padding: 15px 10px;
     letter-spacing: 1px;
@@ -80,16 +94,10 @@ h1 {
     padding-top: 30px;
 }
 
-h3 {
-    color: rgb(200, 199, 209);
-}
 ol.task-list {
     line-height: 1.5em;
     list-style-position: inside;
     padding-left: 10px;
-    li {
-        color: rgb(200, 199, 209);
-    }
 }
 
 .run-code-btn,
@@ -106,10 +114,6 @@ ol.task-list {
     float: right;
     &:hover {
         box-shadow: 0 0 10px 1px $border-color;
-        cursor: pointer;
-    }
-    &:focus {
-        outline: 0;
     }
 }
 
@@ -119,7 +123,6 @@ ol.task-list {
 }
 
 .CodeMirror {
-    // animation-name: boomer;
     animation-duration: .5s;
 }
 // animation for wrong made task
@@ -130,6 +133,57 @@ ol.task-list {
 }
 
 
+.hints-for-user {
+    position: absolute;
+    z-index: 100;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    min-height: 200px;
+    background-color: #002240;
+    padding: 10px;
+    border-radius: 7px;
+    box-shadow: 0 0 5px 1px rgb(184, 207, 238);
+    text-shadow: 0 1px 2px black;
+    display: none;
+    overflow-wrap: break-word;
+    p {
+        margin-top: 10px;
+    }
+}
+button.close {
+    float: right;
+    background-color: transparent;
+    border: none;
+    color: #5a908d;
+    svg {
+        width: 18px;
+        height: 18px;
+        stroke: $text-color;
+        stroke-width: 4;
+        stroke-linecap: square;
+        stroke-linejoin: miter;
+        fill: none;
+        color: $text-color;
+    }
+}
+.links-list {
+    padding-left: 14px;
+    line-height: 1.5em;
+    a {
+        text-decoration: none;
+        color: $text-color;    
+        &:hover {
+            color: rgb(0, 102, 255);
+        }
+        &:active {
+            color: rgb(68, 209, 197);
+        }
+
+    }
+}
+
 @media (min-width: 205px) {
     .run-code-btn,
     .next-task-btn {
@@ -139,6 +193,9 @@ ol.task-list {
 @media (min-width: 316px) {
     .task-panel {
         padding: 15px 20px;
+    }
+    .links-list {
+        padding-left: 25px;
     }
 }
 @media (min-width: 501px) {
@@ -151,17 +208,47 @@ ol.task-list {
     ol.task-list {
         padding-left: 25px;
     }
+    .links-list {
+        padding-left: 30px;
+    }
 }
-@media (min-width: 897px) {
+
+@media (min-width: 612px) {
+    .hints-for-user {
+        width: 65%;
+        padding-left: 20px;
+    }
+}
+@media (min-width: 807px) {
+    .hints-for-user {
+        width: 55%;
+    }
+}
+
+@media (min-width: 1007px) {
     iframe {
-        width: 45vw;
+        width: 34%;
         float: left;
         height: 100vh;
     }
     .task-panel {
-        width: 55vw;
+        width: 66%;
         float: right;
         height: 100vh;
         margin-top: 0;
+    }
+}
+@media (min-width: 1050px) {
+    .hints-for-user {
+        width: 45%;
+    }
+}
+@media (min-width: 1250px) {
+    iframe {
+        width: 40%;
+    }
+
+    .task-panel {
+        width: 60%;
     }
 }

@@ -49,19 +49,25 @@ export const app = {
         }
     },
     renderHints(hints) {
+        const scrollValue = document.querySelector(':root').scrollTop;
+        document.querySelector('.hints-for-user').style.top = `calc(${scrollValue}px + 10vh)`
+        const list = document.querySelector('.links-list');
+        list.innerHTML = '';
         hints.map(hint => {
-            console.log(hint);
             const li = document.createElement('li');
             li.innerHTML = `
-                <a href="${hint}" target="_blank">${hint}</a>
+                <a href="${hint.link}" target="_blank" rel="noopener norefferer">${hint.text}</a>
             `;
-            document.querySelector('.links-list').appendChild(li);
-        })
+            list.appendChild(li);
+        });
+        document.querySelector('.hints-for-user').style.display = 'block';
     },
     handleHintClick(e) {
         const index = e.target.dataset.index;
-        console.log(hints[index]);
         this.renderHints(hints[index]);
+    },
+    hideHints() {
+        document.querySelector('.hints-for-user').style.display = 'none'
     },
     render(taskLink, taskTitle, tasksList) {
         document.querySelector('iframe').src = taskLink;
@@ -73,7 +79,8 @@ export const app = {
             hint.addEventListener('click', (e) => {
                 this.handleHintClick(e);
             })
-        })
+        });
+        document.querySelector('button.close').addEventListener('click', () => this.hideHints());
     }
 };
 
