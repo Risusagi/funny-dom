@@ -42,8 +42,8 @@ export const app = {
             this.playAnimation();
         } else {
             const functionFromUser = new Function(
-                `const iframe = document.querySelector('iframe');
-                ${codeFromUser.replace('document', 'iframe.contentDocument')}`
+                `const iframeDoc = document.querySelector('iframe').contentDocument;
+                ${codeFromUser.replace(/document/g, 'iframeDoc')}`
             );
             functionFromUser();
         }
@@ -67,13 +67,16 @@ export const app = {
         this.renderHints(hints[index]);
     },
     hideHints() {
-        document.querySelector('.hints-for-user').style.display = 'none'
+        document.querySelector('.hints-for-user').style.display = 'none';
     },
     render(taskLink, taskTitle, tasksList) {
         document.querySelector('iframe').src = taskLink;
         document.querySelector('.task-title').textContent = taskTitle;
-        document.querySelector('.task-list').innerHTML = tasksList;
-        document.querySelector('.run-code-btn').addEventListener('click', () => this.applyCode());
+        document.querySelector('.list-of-tasks').innerHTML = tasksList;
+        document.querySelector('.run-code-btn').addEventListener('click', () => {
+            this.applyCode();
+            challenges.goodMorning.checkSolution();
+        });
         this.editorArea.addEventListener('animationend', (e) => this.removeAnimation(e));
         document.querySelectorAll('img.hint').forEach(hint => {
             hint.addEventListener('click', (e) => {
@@ -89,3 +92,4 @@ app.render(link, title, tasks);
 
 // TO DO: 
 // hints about why a solution wasn't accepted
+// problem with double removing of elements

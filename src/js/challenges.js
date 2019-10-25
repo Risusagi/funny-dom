@@ -13,7 +13,7 @@ export const challenges = {
                 <img src="../img/hint.png" class="hint" data-index="0" title="Show some hints">
             </li>
             <li>
-                Select element that has a <span class="class-name">moon</span> class amoung it's classes and delete this element (there are at least 2 ways you can do it).
+                Select element that has a <span class="class-name">moon</span> class amoung it's classes and delete this element (there are at least two ways you can do it).
                 <img src="../img/hint.png" class="hint" data-index="1" title="Show some hints">
             </li>
             <li>
@@ -55,6 +55,53 @@ export const challenges = {
                     link: 'https://developer.mozilla.org/en-US/docs/Web/API/NodeList#wikiArticle'
                 }
             ]
-        ]
+        ],
+        resultFirst(iframeDoc) {
+            const elementsToCheck = [iframeDoc.querySelector('.grass'), iframeDoc.querySelector('.sky')];
+            const taskDone = elementsToCheck.map(obj => obj.classList.contains('morning')).every(result => result);
+            
+            if (taskDone) iframeDoc.querySelector('.building').style.backgroundColor = 'rgb(15, 38, 170)';
+
+            return taskDone;
+            
+        },
+        resultSecond(iframeDoc) {
+            return iframeDoc.querySelector('.moon') === null;
+        },
+        resultThird(iframeDoc) {
+            const sun = iframeDoc.querySelector('.sun');
+            return getComputedStyle(sun).display === 'block';
+        },
+        resultFourth(iframeDoc) {
+            const windows = [...iframeDoc.querySelectorAll('.window')];
+            const resultsArray = windows.map(win => (!win.classList.contains('asleep')) && win.classList.contains('awake'));
+            return resultsArray.every(result => result);
+        },
+        markFinishedTasks(checkPoints) {
+            const tasks = document.querySelectorAll('.list-of-tasks>li');
+            tasks.forEach((task, i) => {
+                if (checkPoints[i]) {
+                    task.style.opacity = '.4';
+                }
+            });
+        },
+        giveAccessToNextTask(checkPoints) {
+            const challengeFinished = checkPoints.every(point => point);
+            
+            if (challengeFinished) document.querySelector('.next-task-btn').removeAttribute('disabled');
+        },
+        checkSolution() {
+            const iframeDoc = document.querySelector('iframe').contentDocument;
+
+            const checkPoints = [
+                this.resultFirst(iframeDoc),
+                this.resultSecond(iframeDoc),
+                this.resultThird(iframeDoc),
+                this.resultFourth(iframeDoc)
+            ];
+            
+            this.markFinishedTasks(checkPoints);
+            this.giveAccessToNextTask(checkPoints);
+        }
     }
 };

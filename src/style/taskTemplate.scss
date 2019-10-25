@@ -94,7 +94,7 @@ h1 {
     padding-top: 30px;
 }
 
-ol.task-list {
+ol.list-of-tasks {
     line-height: 1.5em;
     list-style-position: inside;
     padding-left: 10px;
@@ -120,6 +120,10 @@ ol.task-list {
 .next-task-btn {
     margin-left: 6px;
     margin-top: 16px;
+}
+
+button[disabled] {
+    color: rgba(200, 199, 209, 0.527);
 }
 
 .CodeMirror {
@@ -205,7 +209,7 @@ button.close {
     .task-title {
         padding-top: 0px;
     }
-    ol.task-list {
+    ol.list-of-tasks {
         padding-left: 25px;
     }
     .links-list {
