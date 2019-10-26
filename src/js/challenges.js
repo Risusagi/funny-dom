@@ -1,7 +1,10 @@
+import { app } from './taskTemplate.js';
+
 export const challenges = {
     goodMorning: {
         link:'./goodMorning.html',
         title: 'Good Morning',
+        challengeName: 'goodMorning',
         tasks: `
             <li>
                 Select elements that have one of the next classes:
@@ -77,31 +80,15 @@ export const challenges = {
             const resultsArray = windows.map(win => (!win.classList.contains('asleep')) && win.classList.contains('awake'));
             return resultsArray.every(result => result);
         },
-        markFinishedTasks(checkPoints) {
-            const tasks = document.querySelectorAll('.list-of-tasks>li');
-            tasks.forEach((task, i) => {
-                if (checkPoints[i]) {
-                    task.style.opacity = '.4';
-                }
-            });
-        },
-        giveAccessToNextTask(checkPoints) {
-            const challengeFinished = checkPoints.every(point => point);
-            
-            if (challengeFinished) document.querySelector('.next-task-btn').removeAttribute('disabled');
-        },
-        checkSolution() {
+        checkPoints() {
             const iframeDoc = document.querySelector('iframe').contentDocument;
 
-            const checkPoints = [
+            return [
                 this.resultFirst(iframeDoc),
                 this.resultSecond(iframeDoc),
                 this.resultThird(iframeDoc),
                 this.resultFourth(iframeDoc)
             ];
-            
-            this.markFinishedTasks(checkPoints);
-            this.giveAccessToNextTask(checkPoints);
         }
     }
 };

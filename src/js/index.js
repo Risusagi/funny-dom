@@ -4,5 +4,11 @@ import '../taskTemplate.html';
 
 const rootEl = document.querySelector('#root');
 
-const startPage = new StartPage(rootEl);
-startPage.render();
+const startPoint = localStorage.getItem('startPoint');
+
+if (startPoint) {
+    window.open('../taskTemplate.html', '_self');
+} else {
+    const startPage = new StartPage(rootEl);
+    startPage.render();
+}

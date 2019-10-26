@@ -6,11 +6,11 @@ import '../goodMorning.html';
 import {challenges} from './challenges.js';
 
 
-window.addEventListener('error', function (event) {
-    // console.log(event);
-    app.playAnimation();
-    event.preventDefault();
-})
+// window.addEventListener('error', function (event) {
+//     console.log(event.message);
+//     app.playAnimation();
+//     event.preventDefault();
+// })
 
 export const myCodeMirror = CodeMirror.fromTextArea(document.querySelector('.editor'),
     {
@@ -69,25 +69,51 @@ export const app = {
     hideHints() {
         document.querySelector('.hints-for-user').style.display = 'none';
     },
+    checkSolution(challengeName) {
+        const checkPoints = challenges[challengeName].checkPoints();
+        const challengeFinished = checkPoints.every(point => point);
+
+        this.markFinishedTasks(checkPoints);
+        if (challengeFinished) {
+            this.giveAccessToNextTask();
+            this.saveUsersProgress(challengeName);
+        }
+        
+    },
+    markFinishedTasks(checkPoints) {
+        const tasks = document.querySelectorAll('.list-of-tasks>li');
+        tasks.forEach((task, i) => {
+            if (checkPoints[i])  task.style.opacity = '.4';
+        });
+    },
+    giveAccessToNextTask() {
+        document.querySelector('.next-task-btn').removeAttribute('disabled');
+    },
+    saveUsersProgress(taskTitle) {
+        const challengesNames = Object.keys(challenges);
+        const lastFinishedIndex = challengesNames.indexOf(taskTitle);
+        const firstNotFinishedTask = challengesNames[lastFinishedIndex + 1];
+        localStorage.setItem('startPoint', firstNotFinishedTask);
+    },
     render(taskLink, taskTitle, tasksList) {
         document.querySelector('iframe').src = taskLink;
         document.querySelector('.task-title').textContent = taskTitle;
         document.querySelector('.list-of-tasks').innerHTML = tasksList;
         document.querySelector('.run-code-btn').addEventListener('click', () => {
             this.applyCode();
-            challenges.goodMorning.checkSolution();
+            this.checkSolution(challengeName);
         });
         this.editorArea.addEventListener('animationend', (e) => this.removeAnimation(e));
         document.querySelectorAll('img.hint').forEach(hint => {
-            hint.addEventListener('click', (e) => {
-                this.handleHintClick(e);
-            })
+            hint.addEventListener('click', (e) => this.handleHintClick(e));
         });
         document.querySelector('button.close').addEventListener('click', () => this.hideHints());
     }
 };
 
-const {link, title, tasks, hints} = challenges.goodMorning;
+const task = localStorage.getItem('startPoint');
+
+const {link, title, challengeName, tasks, hints} = challenges[task];
 app.render(link, title, tasks);
 
 // TO DO: 
