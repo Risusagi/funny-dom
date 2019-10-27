@@ -4,7 +4,6 @@ export const challenges = {
     goodMorning: {
         link:'./goodMorning.html',
         title: 'Good Morning',
-        challengeName: 'goodMorning',
         tasks: `
             <li>
                 Select elements that have one of the next classes:

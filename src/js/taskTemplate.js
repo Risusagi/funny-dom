@@ -62,7 +62,7 @@ export const app = {
         });
         document.querySelector('.hints-for-user').style.display = 'block';
     },
-    handleHintClick(e) {
+    handleHintClick(e, hints) {
         const index = e.target.dataset.index;
         this.renderHints(hints[index]);
     },
@@ -77,6 +77,7 @@ export const app = {
         if (challengeFinished) {
             this.giveAccessToNextTask();
             this.saveUsersProgress(challengeName);
+            this.render(localStorage.getItem('startPoint'));
         }
         
     },
@@ -95,26 +96,27 @@ export const app = {
         const firstNotFinishedTask = challengesNames[lastFinishedIndex + 1];
         localStorage.setItem('startPoint', firstNotFinishedTask);
     },
-    render(taskLink, taskTitle, tasksList) {
-        document.querySelector('iframe').src = taskLink;
-        document.querySelector('.task-title').textContent = taskTitle;
-        document.querySelector('.list-of-tasks').innerHTML = tasksList;
+    render() {
+        this.task = localStorage.getItem('startPoint');
+        const {link, title, tasks, hints} = challenges[this.task];
+
+        document.querySelector('iframe').src = link;
+        document.querySelector('.task-title').textContent = title;
+        document.querySelector('.list-of-tasks').innerHTML = tasks;
         document.querySelector('.run-code-btn').addEventListener('click', () => {
             this.applyCode();
-            this.checkSolution(challengeName);
+            this.checkSolution(this.task);
         });
         this.editorArea.addEventListener('animationend', (e) => this.removeAnimation(e));
         document.querySelectorAll('img.hint').forEach(hint => {
-            hint.addEventListener('click', (e) => this.handleHintClick(e));
+            hint.addEventListener('click', (e) => this.handleHintClick(e, hints));
         });
         document.querySelector('button.close').addEventListener('click', () => this.hideHints());
     }
 };
 
-const task = localStorage.getItem('startPoint');
-
-const {link, title, challengeName, tasks, hints} = challenges[task];
-app.render(link, title, tasks);
+localStorage.setItem('startPoint', 'goodMorning');
+app.render();
 
 // TO DO: 
 // hints about why a solution wasn't accepted

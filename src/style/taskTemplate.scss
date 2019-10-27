@@ -120,6 +120,10 @@ ol.list-of-tasks {
 .next-task-btn {
     margin-left: 6px;
     margin-top: 16px;
+    a {
+        text-decoration: none;
+        color: $text-color;
+    }
 }
 
 button[disabled] {
