@@ -4,26 +4,72 @@ export const challenges = {
         title: 'Secret Message',
         tasks: `
             <li>
-                Select all images locates inside <span class="tag-name">blockquote</span> element.
+                Select all images located inside <span class="tag-name">blockquote</span> element. (There is only one blockquote and images are not its direct children.)
             </li>
             <li>
                 Replace every selected image with the text held in its <span class="attribute-name">alt</span> attribute.
                 <img src="../img/hint.png" class="hint" data-index="0" title="Show some hints">
             </li>
+            <li>
+                Delete all images that weren't replaced with text.
+                <img src="../img/hint.png" class="hint" data-index="1" title="Show some hints">
+            </li>
         `,
         hints: [
-            [{
-                text: '',
-                link: ``
-            }]
+            [
+                {
+                    text: 'Document.createTextNode()',
+                    link: `https://developer.mozilla.org/en-US/docs/Web/API/Document/createTextNode`
+                },
+                {
+                    text: 'Node.parentElement',
+                    link: `https://developer.mozilla.org/en-US/docs/Web/API/Node/parentElement`
+                },
+                {
+                    text: 'Node.replaceChild()',
+                    link: `https://developer.mozilla.org/en-US/docs/Web/API/Node/replaceChild`
+                },
+                {
+                    text: 'Document.images',
+                    link: `https://developer.mozilla.org/en-US/docs/Web/API/Document/images`
+                }
+            ],
+            [
+               {
+                   text: 'ChildNode.remove()',
+                   link: `https://developer.mozilla.org/en-US/docs/Web/API/ChildNode/remove`
+               },
+               {
+                   text: 'Node.removeChild()',
+                   link: `https://developer.mozilla.org/en-US/docs/Web/API/Node/removeChild`
+               }
+            ]
         ],
+        checkFirst(usersCode) {
+            const checkPoints = [
+                // two searches separated
+                [
+                    /iframeDoc\.(querySelector|getElementsByTagName)\(('|"|`)blockquote('|"|`)\)/.test(usersCode),
+                    /(?<!iframeDoc)\.((querySelectorAll|getElementsByTagName)\(('|"|`)img('|"|`)\)|images)/.test(usersCode)
+                ].every(statement => statement),
+                // select images with one command
+                /iframeDoc\.querySelectorAll\(('|"|`)blockquote img('|"|`)\)/.test(usersCode)
+            ];
+            return checkPoints.includes(true);
+        },
+        checkSecond(iframeDoc) {
+            const quote = iframeDoc.querySelector('blockquote p');
+            return /Java is to JavaScript what car is to carpet/i.test(quote.textContent.toLowerCase())
+        },
+        checkThird(iframeDoc) {
+            return iframeDoc.images.length === 0;
+        },
         checkPoints(usersCode) {
             const iframeDoc = document.querySelector('iframe').contentDocument;
-
-            const quote = iframeDoc.querySelector('blockquote p');
-
             return [
-                quote.textContent.toLowerCase() === 'Java is to JavaScript what car is to carpet'.toLowerCase()
+                this.checkFirst(usersCode),
+                this.checkSecond(iframeDoc),
+                this.checkThird(iframeDoc)
             ];
         }
     },
@@ -43,20 +89,20 @@ export const challenges = {
             [
                 {
                     text: 'data-* attribute',
-                    link: 'https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/data-*'
+                    link: `https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/data-*`
                 },
                 {
                     text: 'HTMLElement.dataset',
-                    link: 'https://developer.mozilla.org/en-US/docs/Web/API/HTMLOrForeignElement/dataset'
+                    link: `https://developer.mozilla.org/en-US/docs/Web/API/HTMLOrForeignElement/dataset`
                 },
                 {
                     text: 'ParentNode.children',
-                    link: 'https://developer.mozilla.org/en-US/docs/Web/API/ParentNode/children'
+                    link: `https://developer.mozilla.org/en-US/docs/Web/API/ParentNode/children`
                 }
             ]
         ],
         checkFirst(usersCode) {
-            return /iframeDoc\.(querySelectorAll\('\.row'\)|getElementsByClassName\('row'\))/.test(usersCode);
+            return /iframeDoc\.(querySelectorAll\(('|"|`)\.row('|"|`)\)|getElementsByClassName\(('|"|`)row('|"|`)\))/.test(usersCode);
         },
         // check if all cells have apropriate background color
         checkCells(cells, checkParity) {
@@ -122,25 +168,25 @@ export const challenges = {
             [
                 {
                     text: 'ChildNode.remove()',
-                    link: 'https://developer.mozilla.org/en-US/docs/Web/API/ChildNode/remove'
+                    link: `https://developer.mozilla.org/en-US/docs/Web/API/ChildNode/remove`
                 },
                 {
                    text: 'Node.removeChild()',
-                    link: 'https://developer.mozilla.org/en-US/docs/Web/API/Node/removeChild'
+                    link: `https://developer.mozilla.org/en-US/docs/Web/API/Node/removeChild`
                 },
                 {
                     text: 'Node.parentElement',
-                    link: 'https://developer.mozilla.org/en-US/docs/Web/API/Node/parentElement'
+                    link: `https://developer.mozilla.org/en-US/docs/Web/API/Node/parentElement`
                 }
             ],
             [
                 {
                     text: 'ChildNode.remove()',
-                    link: 'https://developer.mozilla.org/en-US/docs/Web/API/Element/classList'
+                    link: `https://developer.mozilla.org/en-US/docs/Web/API/Element/classList`
                 },
                 {
                     text: 'NodeList',
-                    link: 'https://developer.mozilla.org/en-US/docs/Web/API/NodeList#wikiArticle'
+                    link: `https://developer.mozilla.org/en-US/docs/Web/API/NodeList#wikiArticle`
                 }
             ]
         ],
