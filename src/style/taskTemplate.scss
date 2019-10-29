@@ -50,6 +50,10 @@ button {
     }
 }
 
+// inside lists
+ol ul {
+    padding-left: 15px;
+}
 
 iframe {
     width: 100%;
@@ -197,6 +201,9 @@ button.close {
     .next-task-btn {
         margin-top: 13px;
     }
+    ol ul {
+        padding-left: 30px;
+    }
 }
 @media (min-width: 316px) {
     .task-panel {
@@ -204,6 +211,9 @@ button.close {
     }
     .links-list {
         padding-left: 25px;
+    }
+    ol ul {
+        padding-left: 40px;
     }
 }
 @media (min-width: 501px) {

@@ -1,0 +1,163 @@
+@import './modern-normalize.css';
+
+@mixin sizing($size, $difference) {
+    $inner-size: $size - $difference * 2;
+
+    .chessboard-wrap {
+        width: $size;
+        height: $size;
+    }
+    .chessboard {
+        width: $inner-size;
+        height: $inner-size;
+        top: $difference;
+        left: $difference;
+    }
+    .letters {
+        width: $inner-size;
+    }
+    .nums {
+        height: $inner-size;
+    }
+    .ex-row,
+    .row {
+        display: flex;
+        height: calc(#{$inner-size} / 8);
+    }
+
+    .ex-cell,
+    .cell {
+        width: calc(#{$inner-size} / 8);
+        height: 100%;
+    }
+    
+    .letters {
+        left: $difference;
+    }
+    .nums {
+        top: $difference;
+    }
+}
+
+:root {
+    height: 100vh;
+}
+body {
+    background-color: rgb(255, 239, 248);
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    height: 100%;
+    @include sizing(130px, 15px);
+}
+.chessboard-wrap {
+    position: relative;
+    border: 1px solid rgb(172, 172, 172);
+    background-color: rgb(211, 211, 211);
+    border-radius: 4px;
+    font-weight: 500;
+}
+
+.chessboard {
+    border: 3px solid rgb(49, 49, 49);
+    background-color: white;
+    position: absolute;
+    display: flex;
+    flex-direction: column-reverse;
+}
+
+/* designations */
+.letters>*,
+.nums>* {
+    font-size: 10px;
+}
+.letters {
+    display: flex;
+    justify-content: space-around;
+    position: absolute;
+}
+
+.letters-bottom {
+    bottom: 2px;
+}
+
+.letters-top {
+    transform: scaleY(-1) scaleX(-1);
+    top: 2px;
+}
+
+.nums {
+    position: absolute;
+    display: flex;
+    justify-content: space-around;
+}
+
+.numbers-right {
+    right: 4px;
+    flex-direction: column;
+}
+
+.numbers-right>div {
+    transform: scaleY(-1) scaleX(-1);
+}
+
+.numbers-left {
+    left: 4px;
+    flex-direction: column-reverse;
+}
+/* designations end */
+
+
+@media (orientation: landscape) {
+    body {
+        flex-direction: row;
+    }
+}
+@media (orientation: portrait) {
+    body {
+        flex-direction: column;
+    }
+}
+@media (min-width: 300px) {
+    body {
+        @include sizing(170px, 20px);
+    }
+    .letters>*,
+    .nums>* {
+        font-size: 14px;
+    }
+    .numbers-right {
+        right: 7px;
+    }
+    .numbers-left {
+        left: 7px;
+    }
+}
+@media (min-width: 342px) and (min-height: 700px) and (orientation: portrait) {
+    body {
+        @include sizing(240px, 20px);
+    }
+    .letters>*,
+    .nums>* {
+        font-size: 16px;
+    }
+}
+@media (min-width: 363px) and (orientation: portrait) {
+    body {
+        @include sizing(280px, 20px);
+    }
+}
+@media (min-width: 424px) and (orientation: landscape) {
+    body {
+        @include sizing(200px, 20px);
+    }
+    .letters>*,
+    .nums>* {
+        font-size: 16px;
+    }
+}
+@media (min-width: 620px) and (orientation: landscape) {
+    body {
+        @include sizing(220px, 20px);
+    }
+}

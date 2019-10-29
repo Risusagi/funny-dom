@@ -1,8 +1,8 @@
-import '../style/taskTemplate.scss';
 import CodeMirror from './codemirror/lib/codemirror.js';
 import './codemirror/mode/javascript/javascript.js';
 import './codemirror/addon/scroll/simplescrollbars.js';
-import '../goodMorning.html';
+
+import '../style/taskTemplate.scss';
 import {challenges} from './challenges.js';
 
 
@@ -41,16 +41,16 @@ export const app = {
         if (!codeFromUser) {
             this.playAnimation();
         } else {
-            const functionFromUser = new Function(
+            this.functionFromUser = new Function(
                 `const iframeDoc = document.querySelector('iframe').contentDocument;
                 ${codeFromUser.replace(/document/g, 'iframeDoc')}`
             );
-            functionFromUser();
+            this.functionFromUser();
         }
     },
     renderHints(hints) {
         const scrollValue = document.querySelector(':root').scrollTop;
-        document.querySelector('.hints-for-user').style.top = `calc(${scrollValue}px + 10vh)`
+        document.querySelector('.hints-for-user').style.top = `calc(${scrollValue}px + 10vh)`;
         const list = document.querySelector('.links-list');
         list.innerHTML = '';
         hints.map(hint => {
@@ -70,14 +70,13 @@ export const app = {
         document.querySelector('.hints-for-user').style.display = 'none';
     },
     checkSolution(challengeName) {
-        const checkPoints = challenges[challengeName].checkPoints();
+        const checkPoints = challenges[challengeName].checkPoints(this.functionFromUser);
         const challengeFinished = checkPoints.every(point => point);
 
         this.markFinishedTasks(checkPoints);
         if (challengeFinished) {
             this.giveAccessToNextTask();
             this.saveUsersProgress(challengeName);
-            this.render(localStorage.getItem('startPoint'));
         }
         
     },
@@ -99,19 +98,26 @@ export const app = {
     render() {
         this.task = localStorage.getItem('startPoint');
         const {link, title, tasks, hints} = challenges[this.task];
+        // disable button after it was made available
+        document.querySelector('.next-task-btn').setAttribute('disabled', true);
+        // clear code editor
+        myCodeMirror.setValue('');
 
         document.querySelector('iframe').src = link;
         document.querySelector('.task-title').textContent = title;
         document.querySelector('.list-of-tasks').innerHTML = tasks;
+
         document.querySelector('.run-code-btn').addEventListener('click', () => {
             this.applyCode();
             this.checkSolution(this.task);
         });
         this.editorArea.addEventListener('animationend', (e) => this.removeAnimation(e));
+
         document.querySelectorAll('img.hint').forEach(hint => {
             hint.addEventListener('click', (e) => this.handleHintClick(e, hints));
         });
         document.querySelector('button.close').addEventListener('click', () => this.hideHints());
+        document.querySelector('.next-task-btn').addEventListener('click', () => this.render(localStorage.getItem('startPoint')))
     }
 };
 
