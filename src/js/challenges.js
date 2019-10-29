@@ -60,11 +60,11 @@ export const challenges = {
         },
         // check if all cells have apropriate background color
         checkCells(cells, checkParity) {
-            const cellsCheck =  cells.map((cell, index) => {
-                if (index % 2 === checkParity) {
+            const cellsCheck = cells.map((cell, i) => {
+                if (checkParity === i % 2) {
                     return getComputedStyle(cell).backgroundColor === 'rgb(0, 0, 0)';
                 } else {
-                    return true;
+                    return getComputedStyle(cell).backgroundColor !== 'rgb(0, 0, 0)';
                 }
             });
             return cellsCheck.every(cell => cell);
@@ -73,12 +73,12 @@ export const challenges = {
             const iframeDoc = document.querySelector('iframe').contentDocument;
             const rows = iframeDoc.querySelectorAll('.row');
 
-            return [...rows].map((row, i) => {
-                const cells = row.querySelectorAll('.cell');
-                const check = i % 2;
+            return [...rows].map((row, index) => {
+                const cells = [...row.querySelectorAll('.cell')];
+                const check = index % 2;
                 
-                return this.checkCells([...cells], check);
-            });
+                return this.checkCells(cells, check);
+            }).every(el => el);
         },
         checkPoints(usersCode) {
             return [
