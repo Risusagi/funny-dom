@@ -25,12 +25,13 @@ export const myCodeMirror = CodeMirror.fromTextArea(document.querySelector('.edi
 export const app = {
     editorArea: document.querySelector('.CodeMirror'),
     contentHandler: document.querySelector('.editor'),
+    iframe: document.querySelector('iframe'),
 
     playAnimation() {
         this.editorArea.style.setProperty('animation-name', 'boomer');
     },
     removeAnimation(e) {
-       e.currentTarget.removeAttribute('style')
+       e.currentTarget.removeAttribute('style');
     },
     applyCode() {
         // copy the content of the editor into the textarea
@@ -42,7 +43,7 @@ export const app = {
             this.playAnimation();
         } else {
             this.functionFromUser = new Function(
-                `const iframeDoc = document.querySelector('iframe').contentDocument;
+                `const iframeDoc = this.iframe.contentDocument;
                 ${codeFromUser.replace(/document/g, 'iframeDoc')}`
             );
             this.functionFromUser();
@@ -80,10 +81,11 @@ export const app = {
         }
         
     },
+    // if task is done reduce its opacity but if part of the solution was deleted uncheck this task
     markFinishedTasks(checkPoints) {
         const tasks = document.querySelectorAll('.list-of-tasks>li');
         tasks.forEach((task, i) => {
-            if (checkPoints[i])  task.style.opacity = '.4';
+            task.style.opacity = checkPoints[i] ? '.4' : '1';
         });
     },
     giveAccessToNextTask() {
@@ -103,11 +105,15 @@ export const app = {
         // clear code editor
         myCodeMirror.setValue('');
 
-        document.querySelector('iframe').src = link;
+        this.iframe.src = link;
         document.querySelector('.task-title').textContent = title;
         document.querySelector('.list-of-tasks').innerHTML = tasks;
 
-        document.querySelector('.run-code-btn').addEventListener('click', () => {
+        document.querySelector('.run-code-btn').addEventListener('click', () => this.iframe.contentWindow.location.reload(true));
+
+        this.iframe.addEventListener('load', () => {
+            // don't apply code and check solution if iframe was loaded for the first time
+            if (this.iframe.contentWindow.performance.getEntriesByType("navigation")[0].type === 'navigate') return;
             this.applyCode();
             this.checkSolution(this.task);
         });
@@ -117,13 +123,9 @@ export const app = {
             hint.addEventListener('click', (e) => this.handleHintClick(e, hints));
         });
         document.querySelector('button.close').addEventListener('click', () => this.hideHints());
-        document.querySelector('.next-task-btn').addEventListener('click', () => this.render(localStorage.getItem('startPoint')))
+        document.querySelector('.next-task-btn').addEventListener('click', () => this.render(localStorage.getItem('startPoint')));
     }
 };
 
 localStorage.setItem('startPoint', 'goodMorning');
 app.render();
-
-// TO DO: 
-// hints about why a solution wasn't accepted
-// problem with double removing of elements
