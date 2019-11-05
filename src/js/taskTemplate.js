@@ -97,8 +97,25 @@ export const app = {
         const firstNotFinishedTask = challengesNames[lastFinishedIndex + 1];
         localStorage.setItem('startPoint', firstNotFinishedTask);
     },
+    renderChallengesList() {
+        const challengesList = document.querySelector('.challenges-list');
+        if (!challengesList.textContent) {
+            for (let challenge in challenges) {
+                const li = document.createElement('li');
+                li.textContent = challenges[challenge].title;
+                challengesList.appendChild(li);
+                li.addEventListener('click', () => {
+                    localStorage.setItem('startPoint', challenge);
+                    this.render();
+                });
+            }
+        }
+    },
     render() {
         this.task = localStorage.getItem('startPoint');
+
+        if (this.task) this.renderChallengesList();
+
         const {link, title, tasks, hints} = challenges[this.task];
         // disable button after it was made available
         document.querySelector('.next-task-btn').setAttribute('disabled', true);
@@ -124,6 +141,12 @@ export const app = {
         });
         document.querySelector('button.close').addEventListener('click', () => this.hideHints());
         document.querySelector('.next-task-btn').addEventListener('click', () => this.render(localStorage.getItem('startPoint')));
+
+        // for smooth animation
+        document.querySelector('.challenges-navigation').style.transition = 'transform .5s ease-in';
+        
+        document.querySelector('h1').addEventListener('click', () => document.querySelector('.challenges-navigation').classList.add('visible'));
+        document.querySelector('.close-nav').addEventListener('click', () => document.querySelector('.challenges-navigation').classList.remove('visible'));
     }
 };
 
