@@ -4,7 +4,7 @@ import '../taskTemplate.html';
 
 const rootEl = document.querySelector('#root');
 
-const startPoint = localStorage.getItem('startPoint');
+const startPoint = localStorage.getItem('undoneChallenge');
 
 if (startPoint) {
     window.open('../taskTemplate.html', '_self');

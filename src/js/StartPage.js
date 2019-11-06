@@ -221,7 +221,8 @@ export default class StartPage {
     handleMsgSend(e) {
         if (this.usersAgreement) {
             e.currentTarget.href = 'taskTemplate.html';
-            localStorage.setItem('startPoint', 'goodMorning');
+            localStorage.setItem('currentChallenge', 'chessboard');
+            localStorage.setItem('undoneChallenge', 'chessboard');
         } else {
             const regretMsg = document.createElement('div');
             regretMsg.className = 'message';

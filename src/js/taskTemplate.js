@@ -95,25 +95,39 @@ export const app = {
         const challengesNames = Object.keys(challenges);
         const lastFinishedIndex = challengesNames.indexOf(taskTitle);
         const firstNotFinishedTask = challengesNames[lastFinishedIndex + 1];
-        localStorage.setItem('startPoint', firstNotFinishedTask);
+        localStorage.setItem('undoneChallenge', firstNotFinishedTask);
     },
     renderChallengesList() {
         const challengesList = document.querySelector('.challenges-list');
-        if (!challengesList.textContent) {
-            for (let challenge in challenges) {
-                const li = document.createElement('li');
-                li.textContent = challenges[challenge].title;
-                challengesList.appendChild(li);
-                li.addEventListener('click', () => {
-                    localStorage.setItem('startPoint', challenge);
-                    this.render();
-                });
-            }
+        challengesList.innerHTML = '';
+        
+        for (let challenge in challenges) {
+            const li = document.createElement('li');
+            li.textContent = challenges[challenge].title;
+            challengesList.appendChild(li);
+            // for the list item cretaed for this challenge
+            this.separateChallenges(challenge, li);
+        }
+    },
+    separateChallenges(challenge, li) {
+        const challengesAbbr = Object.keys(challenges);
+        const firstUndone = localStorage.getItem('undoneChallenge');
+        const index = challengesAbbr.indexOf(firstUndone);
+        const current = localStorage.getItem('currentChallenge');
+        if (challenge === current) {
+            li.classList.add('current');
+        } else if (challengesAbbr.indexOf(challenge) <= index) {
+            // all list items except current challenge li
+            li.classList.add('available');
+            li.addEventListener('click', () => {
+                localStorage.setItem('currentChallenge', challenge);
+                this.render();
+            });
         }
     },
     render() {
-        this.task = localStorage.getItem('startPoint');
-
+        this.task = localStorage.getItem('currentChallenge');
+        
         if (this.task) this.renderChallengesList();
 
         const {link, title, tasks, hints} = challenges[this.task];
@@ -140,15 +154,16 @@ export const app = {
             hint.addEventListener('click', (e) => this.handleHintClick(e, hints));
         });
         document.querySelector('button.close').addEventListener('click', () => this.hideHints());
-        document.querySelector('.next-task-btn').addEventListener('click', () => this.render(localStorage.getItem('startPoint')));
+        document.querySelector('.next-task-btn').addEventListener('click', () => this.render(localStorage.getItem('undoneChallenge')));
 
         // for smooth animation
         document.querySelector('.challenges-navigation').style.transition = 'transform .5s ease-in';
-        
+
         document.querySelector('h1').addEventListener('click', () => document.querySelector('.challenges-navigation').classList.add('visible'));
         document.querySelector('.close-nav').addEventListener('click', () => document.querySelector('.challenges-navigation').classList.remove('visible'));
     }
 };
 
-localStorage.setItem('startPoint', 'goodMorning');
+localStorage.setItem('undoneChallenge', 'chessboard');
+localStorage.setItem('currentChallenge', 'chessboard');
 app.render();

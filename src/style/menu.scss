@@ -1,0 +1,116 @@
+$available-color: rgb(143, 223, 209);
+$blocked-color: rgb(43, 49, 53);
+$current-color: rgb(42, 207, 180);
+
+
+@mixin textShadow($shadow-color) {
+    text-shadow: 1px 1px 1px $shadow-color,
+                -1px 1px 1px $shadow-color,
+                1px -1px 1px $shadow-color,
+                -1px -1px 1px $shadow-color;
+}
+// navigation
+.challenges-navigation {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 1000;
+    
+    background-color: rgba(0, 24, 32, 0.85);
+    transform: translateX(100%);
+    display: flex;
+    
+    .close-nav {
+        background-color: transparent;
+        border: none;
+        padding: 0;
+        &:hover {
+            background-color: rgba(73, 73, 73, 0.25);
+        }
+        svg {
+            width: 30px;
+            height: 52px;
+            stroke: $available-color;
+            stroke-width: 2.2;
+            stroke-linecap: square;
+            stroke-linejoin: miter;
+            fill: none;
+        }
+    } 
+}
+
+// show list of all challenges
+.challenges-navigation.visible {
+    transform: translate(0%);
+}
+// list of challenges  
+.challenges-list {
+    height: 100%;
+    margin: 0;
+    padding: 20px 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    overflow-y: auto;
+    overflow-wrap: break-word;
+    overflow-x: hidden;
+    flex-grow: 1;
+    z-index: 2;
+    li {
+        width: 100%;
+        list-style-type: none;
+        line-height: 1.2em;
+        padding: 17px 0;
+        text-align: center;
+        color: rgba(0, 24, 32, 0.9);
+        font-weight: bold;
+        cursor: pointer;
+        @include textShadow($blocked-color);
+        
+        &:hover {
+            transform: scale(1.05);
+            transition: transform .2s linear;
+        }
+        &.available {
+            @include textShadow($available-color);
+        }
+        &.current {
+            @include textShadow($current-color);
+            font-size: 1.1em;
+        }
+    }
+    // scrollbar inside challenges navigation
+    &::-webkit-scrollbar {
+        width: 8px;
+    }
+    &::-webkit-scrollbar-track {
+        background: none;
+        margin: 8px 0;
+    }
+    &::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.83);
+        border-radius: 5px;
+    }
+    &::-webkit-scrollbar-thumb:hover {
+        background: rgb(99, 99, 99);
+    }
+}
+
+// MEDIA
+@media (min-width: 474px) {
+    .challenges-navigation {
+        width: 47%;
+    }
+    .challenges-list::-webkit-scrollbar {
+        width: 6px;
+    }
+}
+
+@media (min-width: 734px) {
+    .challenges-navigation {
+        width: 29%;
+    }
+}
