@@ -164,6 +164,6 @@ export const app = {
     }
 };
 
-localStorage.setItem('undoneChallenge', 'chessboard');
-localStorage.setItem('currentChallenge', 'chessboard');
+localStorage.setItem('undoneChallenge', 'newBlinds');
+localStorage.setItem('currentChallenge', 'newBlinds');
 app.render();

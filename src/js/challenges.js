@@ -133,6 +133,27 @@ export const challenges = {
             ];
         }
     },
+    newBlinds: {
+        link: './newBlinds.html',
+        title: 'New Blinds',
+        tasks: `
+            <li>
+            </li>
+        `,
+        hints: [
+            [
+                {
+                    text: '',
+                    link: ``
+                }
+            ]
+        ],
+        checkPoints(usersCode) {
+            return [
+                
+            ];
+        }
+    },
     goodMorning: {
         link:'./goodMorning.html',
         title: 'Good Morning',
