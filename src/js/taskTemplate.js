@@ -126,20 +126,17 @@ export const app = {
             });
         }
     },
-    render() {
-        this.task = localStorage.getItem('currentChallenge');
-        
-        if (this.task) this.renderChallengesList();
-
-        const {link, title, tasks, hints} = challenges[this.task];
-        // disable button after it was made available
-        document.querySelector('.next-task-btn').setAttribute('disabled', true);
-        // clear code editor
-        myCodeMirror.setValue('');
-
-        this.iframe.src = link;
-        document.querySelector('.task-title').textContent = title;
-        document.querySelector('.list-of-tasks').innerHTML = tasks;
+    handleEscEvent(e) {
+        if(e.keyCode !== 27) return;
+        this.hideHints();
+        this.hideChallengesNav();
+    },
+    hideChallengesNav() {
+        document.querySelector('.challenges-navigation').classList.remove('visible');
+    },
+    // add event listeners only when page rendered first time
+    firstRender() {
+        this.render();
 
         document.querySelector('.run-code-btn').addEventListener('click', () => this.iframe.contentWindow.location.reload(true));
 
@@ -161,10 +158,36 @@ export const app = {
         document.querySelector('.challenges-navigation').style.transition = 'transform .5s ease-in';
 
         document.querySelector('h1').addEventListener('click', () => document.querySelector('.challenges-navigation').classList.add('visible'));
-        document.querySelector('.close-nav').addEventListener('click', () => document.querySelector('.challenges-navigation').classList.remove('visible'));
+        document.querySelector('.close-nav').addEventListener('click', () => this.hideChallengesNav());
+
+        window.addEventListener('keydown', (e) => this.handleEscEvent(e));
+        window.addEventListener('click', (e) => {
+            const nav = document.querySelector('.challenges-navigation');
+            const navChildren = [...document.querySelectorAll('.challenges-navigation *')];
+            const logo = document.querySelector('h1');
+            if (e.target !== nav && !navChildren.includes(e.target) && e.target !== logo) {
+                // hide navigation if space outside of it was clicked
+                this.hideChallengesNav();
+            }
+        });
+    },
+    render() {
+        this.task = localStorage.getItem('currentChallenge');
+        
+        if (this.task) this.renderChallengesList();
+
+        const {link, title, tasks, hints} = challenges[this.task];
+        // disable button after it was made available
+        document.querySelector('.next-task-btn').setAttribute('disabled', true);
+        // clear code editor
+        myCodeMirror.setValue('');
+
+        this.iframe.src = link;
+        document.querySelector('.task-title').textContent = title;
+        document.querySelector('.list-of-tasks').innerHTML = tasks;
     }
 };
 
 localStorage.setItem('undoneChallenge', 'newBlinds');
 localStorage.setItem('currentChallenge', 'newBlinds');
-app.render();
+app.firstRender();

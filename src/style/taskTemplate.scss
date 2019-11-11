@@ -132,8 +132,11 @@ ol.list-of-tasks {
     border-radius: 5px;
     transition: all .5s;
     float: right;
-    &:hover {
+    &:hover:not([disabled]) {
         box-shadow: 0 0 10px 1px $border-color;
+    }
+    &[disabled] {
+        border: 1px solid rgba(12, 42, 99, 0.753);
     }
 }
 
@@ -147,7 +150,7 @@ ol.list-of-tasks {
 }
 
 button[disabled] {
-    color: rgba(200, 199, 209, 0.527);
+    color: rgba(200, 199, 209, 0.459);
 }
 
 .CodeMirror {
