@@ -44,6 +44,7 @@ export const app = {
         } else {
             this.functionFromUser = new Function(
                 `const iframeDoc = this.iframe.contentDocument;
+                const iframeWindow = this.iframe.contentWindow;
                 ${codeFromUser.replace(/document/g, 'iframeDoc')}`
             );
             this.functionFromUser();

@@ -138,13 +138,57 @@ export const challenges = {
         title: 'New Blinds',
         tasks: `
             <li>
+                Create variables named <span class="variable-name">outerWidth</span> and <span class="variable-name">outerHeight</span> and give them value of width and height of the element which has a class <span class="class-name">window</span> on its classes list.
+                <img src="../img/hint.png" class="hint" data-index="0" title="Show some hints">
+            </li>
+            <li>
+                Create two more variables named <span class="variable-name">innerWidth</span> and <span class="variable-name">innerHeight</span> and give them value of width and height of the content of the same div without its border width.
+                <img src="../img/hint.png" class="hint" data-index="1" title="Show some hints">
+            </li>
+            <li>
+                Inside each element that has one of the next classes:
+                <span class="class-name">outer-width,</span>
+                <span class="class-name">outer-height,</span>
+                <span class="class-name">inner-width,</span>
+                <span class="class-name">inner-height</span>
+                select the element with a <span class="class-name">size</span> class and change its text into proper value of one of the variables defined at previous tasks.
+                <strong>Only integers without any units are accepted.</strong>
+                <img src="../img/hint.png" class="hint" data-index="2" title="Show some hints">
             </li>
         `,
         hints: [
             [
                 {
-                    text: '',
-                    link: ``
+                    text: 'Element.offsetWidth',
+                    link: `https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/offsetWidth`
+                },
+                {
+                    text: 'Element.offsetHeight',
+                    link: `https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/offsetHeight`
+                },
+                {
+                    text: 'Window.getComputedStyle()',
+                    link: `https://developer.mozilla.org/en-US/docs/Web/API/Window/getComputedStyle`
+                }
+            ],
+            [
+                {
+                    text: 'Element.clientWidth',
+                    link: `https://developer.mozilla.org/en-US/docs/Web/API/Element/clientWidth`
+                },
+                {
+                    text: 'Element.clientHeight',
+                    link: `https://developer.mozilla.org/en-US/docs/Web/API/Element/clientHeight`
+                }
+            ],
+            [
+                {
+                    text: 'String.replace()',
+                    link: `https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replace`
+                },
+                {
+                    text: 'Math.floor()',
+                    link: `https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/floor`
                 }
             ]
         ],
