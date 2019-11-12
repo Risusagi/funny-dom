@@ -1,5 +1,53 @@
 @import './modern-normalize.css';
 
+body {
+    background-color: rgb(238, 237, 225);
+    height: 100vh;
+}
+
+// ARROWS
+.arrow {
+    width: 13px;
+    float: right;
+}
+
+.left-arrow {
+    transform: scaleX(-1);
+    float: left;
+}
+
+.top-arrow {
+    transform: rotate(-90deg);
+}
+
+.bottom-arrow {
+    transform: rotate(90deg);
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}
+
+.arrow-line {
+    position: absolute;
+    width: calc(100% - 10px * 2);
+    height: 1px;
+    background-color: black;
+    top: 6px;
+
+    &:not(.arrow-line-height) {
+        left: 10px;
+    }
+}
+
+.arrow-line-height {
+    height: calc(100% - 10px * 2);
+    width: 1px;
+    top: 10px;
+    right: 6px;
+}
+
+// ARROWS END
+
 @mixin dimensions($top, $left, $width, $height) {
     position: absolute;
     top: $top;
@@ -42,6 +90,7 @@
     }
 }
 
+
 // MAIN MIXIN
 @mixin newBlinds($window-border, $window-height: 72vh, $window-width: 65vw, $window-left: 7vw, $outer-height: 10vh, $inner-height: 7vh) {
 
@@ -49,11 +98,6 @@
     $window-top: 22vh; 
 
     // STYLES
-    body {
-        background-color: rgb(238, 237, 225);
-        height: 100vh;
-    }
-
     .window {
         position: absolute;
         top: $window-top;
@@ -88,48 +132,6 @@
         @include dimensions($top-distance, $left-distance, $inner-height, $height);
         @include heightTemplate();
     }
-
-    // ARROWS
-    .arrow {
-        width: 13px;
-        float: right;
-    }
-
-    .left-arrow {
-        transform: scaleX(-1);
-        float: left;
-    }
-
-    .top-arrow {
-        transform: rotate(-90deg);
-    }
-
-    .bottom-arrow {
-        transform: rotate(90deg);
-        position: absolute;
-        bottom: 0;
-        right: 0;
-    }
-
-    .arrow-line {
-        position: absolute;
-        width: calc(100% - 10px * 2);
-        height: 1px;
-        background-color: black;
-        top: 6px;
-
-        &:not(.arrow-line-height) {
-            left: 10px;
-        }
-    }
-
-    .arrow-line-height {
-        height: calc(100% - 10px * 2);
-        width: 1px;
-        top: 10px;
-        right: 6px;
-    }
-    // ARROWS END
 }
 
 
