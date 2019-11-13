@@ -137,7 +137,7 @@ export const app = {
     // add event listeners only when page rendered first time
     firstRender() {
         this.render();
-
+        
         document.querySelector('.run-code-btn').addEventListener('click', () => this.iframe.contentWindow.location.reload(true));
 
         this.iframe.addEventListener('load', () => {
@@ -149,7 +149,7 @@ export const app = {
         this.editorArea.addEventListener('animationend', (e) => this.removeAnimation(e));
 
         document.querySelectorAll('img.hint').forEach(hint => {
-            hint.addEventListener('click', (e) => this.handleHintClick(e, hints));
+            hint.addEventListener('click', (e) => this.handleHintClick(e, this.hints));
         });
         document.querySelector('button.close').addEventListener('click', () => this.hideHints());
         document.querySelector('.next-task-btn').addEventListener('click', () => this.render(localStorage.getItem('undoneChallenge')));
@@ -177,6 +177,8 @@ export const app = {
         if (this.task) this.renderChallengesList();
 
         const {link, title, tasks, hints} = challenges[this.task];
+        this.hints = hints;
+        
         // disable button after it was made available
         document.querySelector('.next-task-btn').setAttribute('disabled', true);
         // clear code editor

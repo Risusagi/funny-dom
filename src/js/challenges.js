@@ -138,22 +138,13 @@ export const challenges = {
         title: 'New Blinds',
         tasks: `
             <li>
-                Create variables named <span class="variable-name">outerWidth</span> and <span class="variable-name">outerHeight</span> and give them value of width and height of the element which has a class <span class="class-name">window</span> on its classes list.
+                Inside elements that has one of the next classes: <span class="class-name">outer-width,</span>
+                <span class="class-name">outer-height</span> select the child element with a <span class="class-name">size</span> class (one inside each). Give these elements value of the width and height of the element whose classes list includes a <span class="class-name">window</span> class. <strong>Only integers (rounded up) without units are accepted.</strong>
                 <img src="../img/hint.png" class="hint" data-index="0" title="Show some hints">
             </li>
             <li>
-                Create two more variables named <span class="variable-name">innerWidth</span> and <span class="variable-name">innerHeight</span> and give them value of width and height of the content of the same div without its border width.
+                Do the same for elements with a <span class="class-name">size</span> class inside elements that have an <span class="class-name">inner-width</span> or <span class="class-name">inner-height</span> classes. Give them value of the width and height of the content of the same element but <em>without</em> its border width.
                 <img src="../img/hint.png" class="hint" data-index="1" title="Show some hints">
-            </li>
-            <li>
-                Inside each element that has one of the next classes:
-                <span class="class-name">outer-width,</span>
-                <span class="class-name">outer-height,</span>
-                <span class="class-name">inner-width,</span>
-                <span class="class-name">inner-height</span>
-                select the element with a <span class="class-name">size</span> class and change its text into proper value of one of the variables defined at previous tasks.
-                <strong>Only integers without any units are accepted.</strong>
-                <img src="../img/hint.png" class="hint" data-index="2" title="Show some hints">
             </li>
         `,
         hints: [
@@ -169,6 +160,14 @@ export const challenges = {
                 {
                     text: 'Window.getComputedStyle()',
                     link: `https://developer.mozilla.org/en-US/docs/Web/API/Window/getComputedStyle`
+                },
+                {
+                    text: 'String.replace()',
+                    link: `https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replace`
+                },
+                {
+                    text: 'Math.ceil()',
+                    link: `https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/ceil`
                 }
             ],
             [
@@ -180,21 +179,31 @@ export const challenges = {
                     text: 'Element.clientHeight',
                     link: `https://developer.mozilla.org/en-US/docs/Web/API/Element/clientHeight`
                 }
-            ],
-            [
-                {
-                    text: 'String.replace()',
-                    link: `https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replace`
-                },
-                {
-                    text: 'Math.floor()',
-                    link: `https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/floor`
-                }
             ]
         ],
+        compareValues(usersVal, ans1, element, property) {
+            const ans2 = parseInt(getComputedStyle(element)[property]) + 1;
+            return usersVal === `${ans1}` || usersVal === `${ans2}`;
+        },
+        resultFirst(iframeDoc, win) {
+            const outerWidth = iframeDoc.querySelector('.outer-width .size').textContent;
+            const outerHeight = iframeDoc.querySelector('.outer-height .size').textContent;
+            
+            return this.compareValues(outerHeight, win.offsetHeight, win, 'height') && this.compareValues(outerWidth, win.offsetWidth, win, 'width');
+        },
+        resultSecond(iframeDoc, win) {
+            const innerWidth = iframeDoc.querySelector('.inner-width .size').textContent;
+            const innerHeight = iframeDoc.querySelector('.inner-height .size').textContent;
+
+            return innerWidth === `${win.clientWidth}` && innerHeight === `${win.clientHeight}`;
+        },
         checkPoints(usersCode) {
+            const iframeDoc = document.querySelector('iframe').contentDocument;
+            const win = iframeDoc.querySelector('.window');
+
             return [
-                
+                this.resultFirst(iframeDoc, win),
+                this.resultSecond(iframeDoc, win)
             ];
         }
     },
