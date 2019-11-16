@@ -2,6 +2,7 @@
 @import '../js/codemirror/lib/codemirror.css';
 @import '../js/codemirror/theme/cobalt.css';
 @import '../js/codemirror/addon/scroll/simplescrollbars.css';
+@import './common-mixins';
 @import './menu.scss';
 
 $shadow: rgb(138, 212, 200);
@@ -48,12 +49,7 @@ body {
 }
 
 button {
-    &:focus {
-        outline: 0;
-    }
-    &:hover {
-        cursor: pointer;
-    }
+    @include resetBtn();
 }
 
 // inside lists
@@ -185,8 +181,6 @@ button[disabled] {
 }
 button.close {
     float: right;
-    background-color: transparent;
-    border: none;
     color: #5a908d;
     svg {
         width: 18px;

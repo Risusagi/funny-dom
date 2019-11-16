@@ -1,1 +1,1 @@
-module.exports = ['taskTemplate', 'goodMorning', 'secretMessage', 'chessboard', 'newBlinds'];
+module.exports = ['taskTemplate', 'goodMorning', 'secretMessage', 'chessboard', 'newBlinds', 'crashedCarousel'];

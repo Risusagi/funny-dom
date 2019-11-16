@@ -295,5 +295,24 @@ export const challenges = {
                 this.resultFourth(iframeDoc)
             ];
         }
+    },
+    crashedCarousel: {
+        link: './crashedCarousel.html',
+        title: 'Crashed Carousel',
+        tasks: `
+            <li></li>
+        `,
+        hints: [
+            [
+                {}
+            ]
+        ],
+        resultFirst(iframeDoc) {},
+        checkPoints(usersCode) {
+            
+
+            return [
+            ];
+        }
     }
 };
