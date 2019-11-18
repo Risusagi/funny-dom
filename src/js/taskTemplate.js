@@ -178,7 +178,7 @@ export const app = {
 
         const {link, title, tasks, hints} = challenges[this.task];
         this.hints = hints;
-        
+
         // disable button after it was made available
         document.querySelector('.next-task-btn').setAttribute('disabled', true);
         // clear code editor
@@ -190,6 +190,6 @@ export const app = {
     }
 };
 
-localStorage.setItem('undoneChallenge', 'newBlinds');
-localStorage.setItem('currentChallenge', 'newBlinds');
+localStorage.setItem('undoneChallenge', 'crashedCarousel');
+localStorage.setItem('currentChallenge', 'crashedCarousel');
 app.firstRender();

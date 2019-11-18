@@ -2,13 +2,28 @@
 @import url('https://fonts.googleapis.com/css?family=Yantramanav:400,500,700&display=swap');
 @import './common-mixins';
 
-$slide-width: 90vw;
+$slide-width: 100vw - 10vw * 2;
 
 body {
-    padding: 15px;
+    padding: 0 10vw 2vh 10vw;
     background-color: rgb(255, 248, 240);
-    font-size: 18px;
+    font-size: 17px;
     font-family: 'Yantramanav', Arial, Helvetica, sans-serif;
+
+    // scrollbar
+    &::-webkit-scrollbar {
+        width: 8px;
+    }
+    &::-webkit-scrollbar-track {
+        background: rgb(44, 44, 44);
+    }
+    &::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.83);
+        border-radius: 5px;
+    }
+    &::-webkit-scrollbar-thumb:hover {
+        background: rgb(99, 99, 99);
+    }
 }
 
 h1 {
@@ -18,7 +33,6 @@ h1 {
 .carousel {
     position: relative;
     width: $slide-width;
-    max-width: 100%;
     height: calc(#{$slide-width} / 640 * 423);
     overflow: hidden;
     margin: 0 auto;
@@ -56,6 +70,7 @@ h1 {
     padding: 0;
     margin: 0;
     display: flex;
+    list-style-type: none;
 
     li {
         position: relative;
@@ -64,9 +79,27 @@ h1 {
         transform: translateX(-$slide-width);
     }
     
+    figure {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        padding: 0;
+        margin: 0;
+    }
     img {
         width: 100%;
         height: 100%;
+    }
+    figcaption {
+        position: absolute;
+        width: 100%;
+        left: 0;
+        bottom: 0;
+        padding: 2% 4%;
+        background-color: rgba(20, 20, 20, 0.8);
+        color: white;
+        text-shadow: 2px 2px 1px black;
+        font-size: 1.1rem;
     }
 }
 .prev-btn {

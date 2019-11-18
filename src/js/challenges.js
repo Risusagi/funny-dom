@@ -300,18 +300,50 @@ export const challenges = {
         link: './crashedCarousel.html',
         title: 'Crashed Carousel',
         tasks: `
-            <li></li>
+            <li>
+                Change links of images whose signature (a <span class="tag-name">figcaption</span> element next to them) contains text "Hmm, something is wrong here...". You'll find proper links inside images' <span class="attribute-name">alt</span> attributes.
+            </li>
+            <li>
+                After repairing links add more suitable descriptions at <span class="attribute-name">alt</span> attributes of repaired images and delete <span class="tag-name">figcaption</span> elements connected with them.
+            </li>
+            <li>
+                Change text of <span class="tag-name">figcaption</span> elements that are placed inside the same <span class="tag-name">figure</span> elements with images whose <span class="attribute-name">title</span> attribute isn't empty to that attribute's value. After that delete that attributes.
+            </li>
         `,
-        hints: [
-            [
-                {}
-            ]
-        ],
-        resultFirst(iframeDoc) {},
+        hints: [],
+        properLinks: ['standing-on-branch.jpg','hiding-behind-leaves.jpg'],
+        
+        resultFirst(iframeDoc, nonPandaImgs) {
+            const linksChanged = nonPandaImgs.map((img, i) =>  new RegExp(`${this.properLinks[i]}$`).test(img.src));
+            return linksChanged.every(el => el);
+        },
+        resultSecond(iframeDoc, nonPandaImgs) {
+            const altCheck = nonPandaImgs.map((img, i) => !new RegExp(`${this.properLinks[i]}$`).test(img.alt));
+            const figcaptionCheck = nonPandaImgs.map(img => img.nextSiblingElement === undefined);
+            return altCheck.every(el => el) && figcaptionCheck.every(el => el);
+        },
+        resultThird(iframeDoc){
+            const selectedFigcaptions = [...iframeDoc.querySelectorAll('figcaption')].filter(sign => sign.dataset.text);
+            return selectedFigcaptions.map(sign => sign.textContent === sign.dataset.text).every(el => el);
+        },
+        correctImgLinks(iframeDoc) {
+            [...iframeDoc.images].forEach(img => {
+                const fileName = img.src.match(/[a-z1-9\-]+\.jpg$/)[0];
+                const linkCorr = /img\/crashedCarousel\/[a-z1-9\-]+\.jpg$/.test(img.src);
+                if (linkCorr) return;
+                img.src = img.src.replace(fileName, `img/crashedCarousel/${fileName}`);
+            });
+        },
         checkPoints(usersCode) {
+            const iframeDoc = document.querySelector('iframe').contentDocument;
             
+            this.correctImgLinks(iframeDoc);
+            const nonPandaImgs = [...iframeDoc.images].filter(img => img.dataset.animal !== 'panda');
 
             return [
+                this.resultFirst(iframeDoc, nonPandaImgs),
+                this.resultSecond(iframeDoc, nonPandaImgs),
+                this.resultThird(iframeDoc)
             ];
         }
     }
