@@ -1,4 +1,57 @@
 export const challenges = {
+    shopwindow: {
+        link: './shopwindow.html',
+        title: 'Shopwindow',
+        tasks: `
+            <li>
+                Move first child of the element with a class <span class="class-name">bottom-shelf</span> class to its previous sibling element so that it become its last child.
+                <img src="../img/hint.png" class="hint" data-index="0" title="Show some hints">
+            </li>
+            <li>
+                Write prices for toys that have an empty price tag (element whose list of classes contains class <span clas="class-name">price</span>). Dolls cost 15 and bears &#x2012 50. Dolls have a <span class="class-name">doll</span> class on their lists of classes and bears &#x2012 a <span class="class-name">bear</span> class.
+                <img src="../img/hint.png" class="hint" data-index="1" title="Show some hints">
+            </li>
+        `,
+        hints: [
+            [
+                {
+                    text: 'ParentNode.firstElementChild',
+                    link: `https://developer.mozilla.org/en-US/docs/Web/API/ParentNode/firstElementChild`
+                },
+                {
+                    text: 'Node.previousSibling',
+                    link: `https://developer.mozilla.org/en-US/docs/Web/API/Node/previousSibling`
+                },
+                {
+                    text: 'Node.appendChild()',
+                    link: `https://developer.mozilla.org/en-US/docs/Web/API/Node/appendChild`
+                }
+            ],
+            [
+                {
+                    text: 'Element.classList',
+                    link: `https://developer.mozilla.org/en-US/docs/Web/API/Element/classList`
+                }
+            ]
+        ],
+        resultFirst(iframeDoc) {
+            const lostDoll = iframeDoc.querySelector('.lost-doll');
+            return iframeDoc.querySelector('.top-shelf').lastElementChild === lostDoll && ![...iframeDoc.querySelector('.bottom-shelf').children].includes(lostDoll);
+        },
+        resultSecond(iframeDoc) {
+            const priceTags = [...iframeDoc.querySelectorAll('.price')];
+            const prices = [20, 35, 15, 15, 15, 50, 50];
+            return priceTags.map((price, i) => price.textContent === prices[i]).every(el => el);
+        },
+        checkPoints(usersCode) {
+            const iframeDoc = document.querySelector('iframe').contentDocument;
+
+            return [
+                this.resultFirst(iframeDoc),
+                this.resultSecond(iframeDoc)
+            ];
+        }
+    },
     secretMessage: {
         link: './secretMessage.html',
         title: 'Secret Message',

@@ -1,0 +1,102 @@
+@import './modern-normalize.css';
+
+* {
+    font-size: 18px;
+}
+
+body {
+    width: 100vw;
+    height: 100vh;
+    background-color: rgb(112, 31, 17);
+}
+
+.signboard {
+    height: 17vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-transform: uppercase;
+    span {
+        font-size: 3.5rem;
+        font-weight: 800;
+        letter-spacing: 10px;
+        color: rgb(232, 233, 220);
+        text-shadow: 2px 3px black,
+                    -2px 3px black;
+    }
+}
+.shopwindow {
+    position: relative;
+    width: 90vw;
+    height: 70vh;
+    margin: 0 auto;
+    background-color: rgb(220, 220, 255);
+    border: 6px solid rgb(46, 39, 35);
+}
+.shelf {
+    position: relative;
+    height: 50%;
+    display: flex;
+    justify-content: space-around;
+    &>div {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+    }
+    img {
+        width: 100%;
+    }
+}
+.top-shelf {
+    border-bottom: 2px solid black;
+    &>div {
+        width: 15%;
+    }
+}
+.bottom-shelf {
+    &>div {
+        width: 30%;
+    }
+    .lost-doll {
+        width: 15%;
+    }
+}
+
+.price {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 25px;
+    background-color: rgb(245, 245, 245);
+    border: 1px solid black;
+    border-radius: 5px;
+    text-align: center;
+}
+
+@media (orientation: landscape) {
+    .shopwindow {
+        height: 80vh;
+        img {
+            height: 37vh;
+            width: initial;
+        }
+    }
+}
+
+@media (max-width: 329px) {
+    .signboard span {
+        font-size: 2rem;
+        letter-spacing: 5px;
+    }
+    .shopwindow {
+        width: 96vw;
+    }
+    .price {
+        width: 30px;
+        height: 19px;
+        font-size: 16px;
+    }
+}
