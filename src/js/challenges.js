@@ -186,6 +186,26 @@ export const challenges = {
             ];
         }
     },
+    idCard: {
+        link: './idCard.html',
+        title: 'ID Card',
+        tasks: `
+            <li>
+                Append an event handler to a <span class="tag-name">form</span> element that would prevent it from its default behavior on submit event.
+            </li>
+            <li>
+                Inside that function add logic that would concatinate values of <span class="tag-name">inputs</span> with <span class="attribute-name">firstName</span> and <span class="attribute-name">surname</span> ids to one string and replace text inside element which has a <span class="class-name">worker-name</span> class with this string being capitalized.
+            </li>
+        `,
+        hints: [
+            []
+        ],
+        checkPoints(usersCode) {
+            return [
+                
+            ];
+        }
+    },
     newBlinds: {
         link: './newBlinds.html',
         title: 'New Blinds',
