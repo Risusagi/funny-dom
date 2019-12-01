@@ -95,8 +95,14 @@ export const app = {
     saveUsersProgress(taskTitle) {
         const challengesNames = Object.keys(challenges);
         const lastFinishedIndex = challengesNames.indexOf(taskTitle);
-        const firstNotFinishedTask = challengesNames[lastFinishedIndex + 1];
-        localStorage.setItem('undoneChallenge', firstNotFinishedTask);
+        const currentUndoneIndex = challengesNames.indexOf(localStorage.getItem('undoneChallenge'));
+
+        // don't change undone challnge if next would be clicked in earlier task then current undone
+        if (lastFinishedIndex >= currentUndoneIndex) {
+            const firstNotFinishedTask = challengesNames[lastFinishedIndex + 1];
+            localStorage.setItem('undoneChallenge', firstNotFinishedTask);
+        }
+        
     },
     renderChallengesList() {
         const challengesList = document.querySelector('.challenges-list');
@@ -115,6 +121,7 @@ export const app = {
         const firstUndone = localStorage.getItem('undoneChallenge');
         const index = challengesAbbr.indexOf(firstUndone);
         const current = localStorage.getItem('currentChallenge');
+        
         if (challenge === current) {
             li.classList.add('current');
         } else if (challengesAbbr.indexOf(challenge) <= index) {
@@ -122,7 +129,7 @@ export const app = {
             li.classList.add('available');
             li.addEventListener('click', () => {
                 localStorage.setItem('currentChallenge', challenge);
-                this.render();
+                this.render(localStorage.getItem('currentChallenge'));
             });
         }
     },
@@ -134,9 +141,16 @@ export const app = {
     hideChallengesNav() {
         document.querySelector('.challenges-navigation').classList.remove('visible');
     },
+    handleNextClick() {
+        const undone = localStorage.getItem('undoneChallenge');
+
+        localStorage.setItem('currentChallenge', undone);
+
+        this.render(undone);
+    },
     // add event listeners only when page rendered first time
     firstRender() {
-        this.render();
+        this.render(localStorage.getItem('currentChallenge'));
         
         document.querySelector('.run-code-btn').addEventListener('click', () => this.iframe.contentWindow.location.reload(true));
 
@@ -152,7 +166,7 @@ export const app = {
             hint.addEventListener('click', (e) => this.handleHintClick(e, this.hints));
         });
         document.querySelector('button.close').addEventListener('click', () => this.hideHints());
-        document.querySelector('.next-task-btn').addEventListener('click', () => this.render(localStorage.getItem('undoneChallenge')));
+        document.querySelector('.next-task-btn').addEventListener('click', () => this.handleNextClick());
 
         // for smooth animation
         document.querySelector('.challenges-navigation').style.transition = 'transform .5s ease-in';
@@ -171,9 +185,11 @@ export const app = {
             }
         });
     },
-    render() {
-        this.task = localStorage.getItem('currentChallenge');
+    render(taskToRender) {
+        // this.task = localStorage.getItem('currentChallenge');
         
+        this.task = taskToRender;
+
         if (this.task) this.renderChallengesList();
 
         const {link, title, tasks, hints} = challenges[this.task];
