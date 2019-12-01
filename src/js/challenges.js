@@ -200,9 +200,49 @@ export const challenges = {
         hints: [
             []
         ],
+        checkFirst(iframeDoc, confirmBtn) {
+            const form = iframeDoc.querySelector('form');
+            let myEvent;
+
+            form.addEventListener('submit', (e) => {
+                myEvent = e;
+            });
+            
+            confirmBtn.click();
+            
+            return myEvent.defaultPrevented;
+        },
+        checkSecond(iframeDoc, confirmBtn) {
+            const nameInput = iframeDoc.querySelector('#firstName');
+            const surnameInput = iframeDoc.querySelector('#surname');
+            // check capitalization
+            nameInput.value = 'nAme';
+            surnameInput.value = 'SuRname';
+            
+            confirmBtn.click();
+
+            const requeiredValue = `${nameInput.value} ${surnameInput.value}`.toUpperCase();
+
+            const workerNameEl = iframeDoc.querySelector('.worker-name');
+
+            // clean all values so that user doesn't see them
+            nameInput.value = '';
+            surnameInput.value = '';
+
+            // get text before cleaning
+            const name = workerNameEl.textContent;
+
+            workerNameEl.textContent = '';
+
+            return name === requeiredValue;
+        },
         checkPoints(usersCode) {
+            const iframeDoc = document.querySelector('iframe').contentDocument;
+            const confirmBtn = iframeDoc.querySelector('.confirm-btn');
+            
             return [
-                
+              this.checkFirst(iframeDoc, confirmBtn),
+              this.checkSecond(iframeDoc, confirmBtn)
             ];
         }
     },
