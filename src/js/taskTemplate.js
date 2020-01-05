@@ -192,7 +192,7 @@ export const app = {
 
         if (this.task) this.renderChallengesList();
 
-        const {link, title, tasks, hints} = challenges[this.task];
+        const {link, title, tasks, hints, description} = challenges[this.task];
         this.hints = hints;
 
         // disable button after it was made available
@@ -203,6 +203,7 @@ export const app = {
         this.iframe.src = link;
         document.querySelector('.task-title').textContent = title;
         document.querySelector('.list-of-tasks').innerHTML = tasks;
+        document.querySelector('.description').innerHTML = description;
     }
 };
 

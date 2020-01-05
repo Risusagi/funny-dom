@@ -2,9 +2,12 @@ export const challenges = {
     shopwindow: {
         link: './shopwindow.html',
         title: 'Shopwindow',
+        description: `
+            <p>A new worker put one of the dolls on the wrong shelf and forgot to write prices on some of the price tags. Help him a little bit, please.</p>
+        `,
         tasks: `
             <li>
-                Move first child of the element with a class <span class="class-name">bottom-shelf</span> class to its previous sibling element so that it become its last child.
+                Move first child of the element with a <span class="class-name">bottom-shelf</span> class to its previous sibling element so that it become its last child.
                 <img src="../img/hint.png" class="hint" data-index="0" title="Show some hints">
             </li>
             <li>
@@ -55,6 +58,9 @@ export const challenges = {
     secretMessage: {
         link: './secretMessage.html',
         title: 'Secret Message',
+        description: `
+            <p>Do you like movies about James Bond? If so this task would be a piece of cake for you. You just need to decrypt this quote.</p>
+        `,
         tasks: `
             <li>
                 Select all images located inside <span class="tag-name">blockquote</span> element. (There is only one blockquote and images are not its direct children.)
@@ -129,6 +135,9 @@ export const challenges = {
     chessboard: {
         link: './chessboard.html',
         title: 'Chessboard',
+        description: `
+            <p>I wanted to make some chessboards but I don't have enough time to finish the last one. Could you please do it for me? I have made a frame you just need to color it inside.</p>
+        `,
         tasks: `
             <li>
                 Select all elements that has a class <span class="class-name">row</span>.
@@ -189,12 +198,15 @@ export const challenges = {
     idCard: {
         link: './idCard.html',
         title: 'ID Card',
+        description: `
+            <p>Here is a page that creates identifiers for company workers. Can you help me to finish it so that it would complete an ID card according to data from the form?</p>
+        `,
         tasks: `
             <li>
                 Append an event handler to a <span class="tag-name">form</span> element that would prevent it from its default behavior on submit event.
             </li>
             <li>
-                Inside that function add logic that would concatinate values of <span class="tag-name">inputs</span> with <span class="attribute-name">firstName</span> and <span class="attribute-name">surname</span> ids to one string and replace text inside element which has a <span class="class-name">worker-name</span> class with this string being capitalized.
+                Inside that function add logic that would concatinate values of <span class="tag-name">inputs</span> with <span class="attribute-name">firstName</span> and <span class="attribute-name">surname</span> ids to one string and replace text inside element which has a <span class="class-name">worker-name</span> class with that string being capitalized.
             </li>
         `,
         hints: [
@@ -249,10 +261,13 @@ export const challenges = {
     newBlinds: {
         link: './newBlinds.html',
         title: 'New Blinds',
+        description: `
+           <p>I want to buy new blinds for my kittchen, but I need to know precise sizes of the window. Can you help me with a measurement, please?</p>
+        `,
         tasks: `
             <li>
                 Inside elements that has one of the next classes: <span class="class-name">outer-width,</span>
-                <span class="class-name">outer-height</span> select the child element with a <span class="class-name">size</span> class (one inside each). Give these elements value of the width and height of the element whose classes list includes a <span class="class-name">window</span> class. <strong>Only integers (rounded up) without units are accepted.</strong>
+                <span class="class-name">outer-height</span> select the child element with a <span class="class-name">size</span> class (one inside each). Give these elements value of the width and height of the element whose classes' list includes a <span class="class-name">window</span> class. <strong>Only integers (rounded up) without units are accepted.</strong>
                 <img src="../img/hint.png" class="hint" data-index="0" title="Show some hints">
             </li>
             <li>
@@ -323,6 +338,9 @@ export const challenges = {
     goodMorning: {
         link:'./goodMorning.html',
         title: 'Good Morning',
+        description: `
+           <p>It looks like a sunrise is late today. Don't you think we should hurry it up a little bit?</p>
+        `,
         tasks: `
             <li>
                 Select elements that have one of the next classes:
@@ -334,7 +352,7 @@ export const challenges = {
                 <img src="../img/hint.png" class="hint" data-index="0" title="Show some hints">
             </li>
             <li>
-                Select element that has a <span class="class-name">moon</span> class amoung it's classes and delete this element (there are at least two ways you can do it).
+                Select element that has a <span class="class-name">moon</span> class among its classes and delete this element (there are at least two ways you can do it).
                 <img src="../img/hint.png" class="hint" data-index="1" title="Show some hints">
             </li>
             <li>
@@ -412,6 +430,10 @@ export const challenges = {
     crashedCarousel: {
         link: './crashedCarousel.html',
         title: 'Crashed Carousel',
+        description: `
+            <p>Yesterday carousel with images worked perfect but today something is wrong with it. Can you fix it, please?</p>
+            <p>P.S. I have marked images that doesn't match to simplify it for you.</p>
+        `,
         tasks: `
             <li>
                 Change links of images whose signature (a <span class="tag-name">figcaption</span> element next to them) contains text "Hmm, something is wrong here...". You'll find proper links inside images' <span class="attribute-name">alt</span> attributes.
@@ -420,7 +442,7 @@ export const challenges = {
                 After repairing links add more suitable descriptions at <span class="attribute-name">alt</span> attributes of repaired images and delete <span class="tag-name">figcaption</span> elements connected with them.
             </li>
             <li>
-                Change text of <span class="tag-name">figcaption</span> elements that are placed inside the same <span class="tag-name">figure</span> elements with images whose <span class="attribute-name">title</span> attribute isn't empty to that attribute's value. After that delete that attributes.
+                Change text of <span class="tag-name">figcaption</span> elements that are placed inside the same <span class="tag-name">figure</span> elements with images whose <span class="attribute-name">title</span> attribute isn't empty to that attribute's value. After that delete that attribute.
             </li>
         `,
         hints: [],
