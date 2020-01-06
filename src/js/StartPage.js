@@ -1,100 +1,9 @@
 export default class StartPage {
     constructor(rootEl) {
         this.rootEl = rootEl;
-    }
-
-    startChat() {
-        this.rootEl.innerHTML = `
-            <div class="chat">
-                <div class="chat-header">
-                    <p>Funny DOM</p>
-                    <span class="status">online</span> 
-                </div>
-
-                <div class="chat-body">
-                
-                    <div class="message">
-                        <p>Hello. Nice to meet you &#x1F60A</p>
-                    </div>
-                    
-
-                    <div class="message dot-message">
-                        <span class="dot"></span>
-                        <span class="dot"></span>
-                        <span class="dot"></span>
-                    </div>
-
-                    ${this.generateMessages()}
-
-                    <div class="message">
-                        <p>I&#39;ve heard you have been learning the Document Object Model for some time and now want to use this knowledge in practice.</p>
-                    </div>
-
-                    <div class="message">
-                        <p>I&#39;m going to an interesting but not an easy trip. So I just thought we can help each other.</p>
-                    </div>
-
-                    <div class="message">
-                        <p>You will get some experience and I will have an assistant.</p>
-                    </div>
-
-                    <div class="message">
-                        <p>What do you think about it?</p>
-                    </div>
-
-                </div>
-
-                <div class="chat-input">
-
-                    <div class="answers">
-
-                        <div class="answer positive">
-                            <p>Gladly &#x1F60A When we go?</p>
-                        </div>
-
-                        <div class="answer negative">
-                            <p>Sorry&#130; not this time</p>
-                        </div>
-
-                        <div class="answer positive">
-                            <p>Sounds interesting. I&#39;ll give you a chance &#x1F603</p>
-                        </div>
-
-                    </div>
-
-                    <div class="input-panel">
-
-                        <div class="msg-input">
-                            <span>Type a message...</span>
-                        </div>
-
-                        <a>
-                            <svg class="send-icon" role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="sendIconTitle">
-                                <title id="sendIconTitle">Send</title>
-                                <polygon points="21.368 12.001 3 21.609 3 14 11 12 3 9.794 3 2.394"></polygon>
-                            </svg>
-                        </a>
-
-                    </div>
-
-                </div>
-
-            </div>
-        `;
-        
         this.chatBody = document.querySelector('.chat-body');
         this.dotMsg = this.chatBody.querySelector('.dot-message');
-
-        const messages = this.chatBody.querySelectorAll('.message:not(.dot-message):not(:first-child)');
-
-        setTimeout(() => this.displayDotMessage(), 2000);
-
-        for(let i = 0; i < messages.length; i++)  this.renderIntroduction(i, messages);  
-        
         this.handleSend = (e) => this.handleMsgSend(e);
-        
-        document.querySelector('.chat-input a').addEventListener('click', this.handleSend);
-        document.querySelectorAll('.answer').forEach(ans => ans.addEventListener('click', (e) => this.typeMessage(e)));
     }
 
     // renders messages with dot message between them
@@ -137,16 +46,17 @@ export default class StartPage {
     // generates messages depending on what time is it now
     generateMessages() {
         const usersTime = new Date().getHours();
+        const altMsgs = document.querySelector('.alt-messages').innerHTML;
 
         switch (true) {
             case usersTime >= 5 && usersTime <= 9:
-                return `
-                    <div class="message alt-message">
-                        <p>Morning is a great time to learn something new. So I won't waste your precious time and just come to the point.</p>
+                altMsgs = `
+                    <div class="message">
+                        <p>Morning is a great time to learn something new. So I won&apos;t waste your precious time and just come to the point.</p>
                     </div>
                 `;
             case usersTime >= 10 && usersTime <= 15:
-                return `
+                altMsgs = `
                     <div class="message">
                         <p>What is the weather like today?</p>
                     </div>
@@ -158,18 +68,18 @@ export default class StartPage {
                     </div>
                 `;
             case usersTime >= 16 && usersTime <= 23:
-                return `
+                altMsgs = `
                     <div class="message">
-                        <p>You are probably tired after a long day&#130; so I won't bore you with long talks and just come to the point.</p>
+                        <p>You are probably tired after a long day, so I won't bore you with long talks and just come to the point.</p>
                     </div>
                 `;
             case usersTime >= 0 && usersTime <= 4:
-                return `
+                altMsgs = `
                     <div class="message">
                         <p>It's pretty late now. Hope you are not too tired to learn new things.</p>
                     </div>
                 `;
-            };
+        };
     }
 
     // scrolls chat to its lowest point
@@ -255,10 +165,9 @@ export default class StartPage {
             document.querySelector('.chat-input').style.height = '80px';
             this.chatBody.style.height = 'calc(100vh - 80px)';
 
-
             const regretMsg = document.createElement('div');
             regretMsg.className = 'message';
-            regretMsg.innerHTML = `<p>Oh&#130; in this case I&#39;ll not waste your time any more. Have a nice day &#x1F600</p>`;
+            regretMsg.innerHTML = `<p>Oh, in this case I'll not waste your time any more. Have a nice day &#x1F600</p>`;
             regretMsg.style.display = 'block';
 
             const sendBtn = e.currentTarget;
@@ -272,23 +181,19 @@ export default class StartPage {
         }
     }
 
-    render() {
-        this.rootEl.innerHTML = `
-            <div class="desktop">
-                <img class="folder" src="../img/folder.png">
-                <img class="folder" src="../img/folder.png">
-                <img class="folder" src="../img/folder.png">
-                <img class="folder" src="../img/folder.png">
+    startChat() {
+        const messages = this.chatBody.querySelectorAll('.message:not(.dot-message):not(:first-child)');
 
-                <div class="modal">
-                    <div class="modal-content">
-                        <p>You have <span class="messages-amount">1</span> new message</p>
-                        <button class="open-msg-btn">Open</button>
-                    </div>
-                </div>
-            </div>
-        `;
+        setTimeout(() => this.displayDotMessage(), 2000);
 
-        document.querySelector('.open-msg-btn').addEventListener('click', () => this.startChat());
+        for (let i = 0; i < messages.length; i++) this.renderIntroduction(i, messages);
+
+        document.querySelector('.chat-input a').addEventListener('click', this.handleSend);
+        document.querySelectorAll('.answer').forEach(ans => ans.addEventListener('click', (e) => this.typeMessage(e)));
+
+        document.querySelector('.skip-btn').addEventListener('click', (e) => {
+            this.answer = this.usersAgreement = true;
+            this.handleMsgSend(e);
+        })
     }
 }

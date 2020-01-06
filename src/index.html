@@ -8,6 +8,83 @@
     <title>Funny DOM</title>
 </head>
 <body>
-    <div id="root"></div>
+    <div class="chat">
+        <div class="chat-header">
+            <p>Funny DOM</p>
+            <span class="status">online</span> 
+        </div>
+
+        <div class="chat-body">
+        
+            <div class="message first-msg">
+                <p>Hello. Nice to meet you &#x1F60A</p>
+            </div>
+
+            <div class="message dot-message">
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+            </div>
+
+            <div class="alt-messages"></div>
+
+            <div class="message">
+                <p>I've heard you have been learning the Document Object Model for some time and now want to use this knowledge in practice.</p>
+            </div>
+
+            <div class="message">
+                <p>I'm going to an interesting but not an easy trip. So I just thought we can help each other.</p>
+            </div>
+
+            <div class="message">
+                <p>You'll get some experience of how to work with DOM and I will have an assistant. Win-win&#x1F60A
+                </p>
+            </div>
+
+            <div class="message">
+                <p>What do you think about it?</p>
+            </div>
+
+            <a class="skip-btn">Skip</a>
+            
+        </div>
+
+        <!-- CHAT INPUT START -->
+        <div class="chat-input">
+
+            <div class="answers">
+
+                <div class="answer positive">
+                    <p>Gladly &#x1F60A When we go?</p>
+                </div>
+
+                <div class="answer negative">
+                    <p>Sorry, not this time</p>
+                </div>
+
+                <div class="answer positive">
+                    <p>Sounds interesting. I'll give you a chance &#x1F603</p>
+                </div>
+
+            </div>
+
+            <div class="input-panel">
+
+                <div class="msg-input">
+                    <span>Type a message...</span>
+                </div>
+
+                <a>
+                    <svg class="send-icon" role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="sendIconTitle">
+                        <title id="sendIconTitle">Send</title>
+                        <polygon points="21.368 12.001 3 21.609 3 14 11 12 3 9.794 3 2.394"></polygon>
+                    </svg>
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
 </body>
 </html>

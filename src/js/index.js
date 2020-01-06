@@ -10,5 +10,5 @@ if (startPoint) {
     window.open('../taskTemplate.html', '_self');
 } else {
     const startPage = new StartPage(rootEl);
-    startPage.render();
+    startPage.startChat();
 }
