@@ -1,134 +1,167 @@
+import {challenges} from './challenges';
+
 export default class StartPage {
-    constructor(rootEl) {
-        this.rootEl = rootEl;
+    constructor() {
+        this.rootEl = document.querySelector('#root');
         this.chatBody = document.querySelector('.chat-body');
+        this.chatInput = document.querySelector('.chat-input');
         this.dotMsg = this.chatBody.querySelector('.dot-message');
+        this.msgInput = document.querySelector('.msg-input');
+        this.skipBtn = document.querySelector('.skip-btn');
+
+        this.initialSkipTop = parseInt(getComputedStyle(this.skipBtn).top);
+        this.CIinitialHeight = getComputedStyle(this.chatInput).height;
+
         this.handleSend = (e) => this.handleMsgSend(e);
+        this.renderAns = () => this.renderAnswers();
     }
 
-    // renders messages with dot message between them
-    renderIntroduction(index, messages) {
-        const msgPeriods = [...messages].map(msg => this.countTime(msg));
-        const msgStarts = [];
+    // generates messages depending on what time is it now
+    renderAltMessages() {
+        const texts = this.createAltMsgsText();
+        const fragment = document.createDocumentFragment();
 
-        for (let i = 0; i < msgPeriods.length; i++) {
-            msgStarts.push(msgPeriods.slice(0, i).reduce((cur, total) => total + cur, 0));
+        for (const text of texts) {
+            const message = this.createAltMessage(text);
+            fragment.appendChild(message);
         }
 
-        setTimeout(() => {
-            if(index === messages.length - 1) {
-                this.displayDotMessage();
-                this.requireAnswer();
-            }
-
-            this.renderMsg();
-            this.scrollDown(this.chatBody);
-            
-        }, msgStarts[index] + 5500);
+        // append messages right after dot message
+        this.chatBody.insertBefore(fragment, this.dotMsg.nextElementSibling);
     }
 
-    displayDotMessage() {
-        this.dotMsg.style.display = getComputedStyle(this.dotMsg).display === 'none' ? 'block' : 'none';
+    // create messages depend on user's current time
+    createAltMsgsText() {
+        const usersTime = new Date().getHours();
+
+        switch (true) {
+            case usersTime >= 5 && usersTime <= 9:
+                return [
+                    `<p>Morning is a great time to learn something new. So I won&apos;t waste your precious time and just come to the point.</p>`
+                ];
+            case usersTime >= 10 && usersTime <= 15:
+                return [
+                    `<p>What is the weather like today?</p>`,
+                    `<p>Hope it is pretty well.</p>`,
+                    `<p>But if it is not, I have a proposal that will make you forget about bad weather.</p>`
+                ];
+            case usersTime >= 16 && usersTime <= 23:
+                return [
+                    `<p>You are probably tired after a long day, so I won't bore you with long talks and just come to the point.</p>`
+                ];
+            case usersTime >= 0 && usersTime <= 4:
+                return [
+                    `<p>It's pretty late now. Hope you are not too tired to learn new things.</p>`
+                ];
+        };
+    }
+    createAltMessage(innerCode) {
+        const msgElement = document.createElement('div');
+        msgElement.classList.add('fd-msg', 'message');
+        msgElement.innerHTML = innerCode;
+        return msgElement;
+    }    
+
+    // create array of moments when messages should appear on screen
+    // start from 0 and add next period creating next start
+    createMsgsStarts(messages) {
+        const msgPeriods = [...messages].map(msg => this.countTime(msg));
+        this.msgStarts = [];
+        
+        for (let i = 0; i < msgPeriods.length; i++) {
+            this.msgStarts.push(msgPeriods.slice(0, i).reduce((cur, total) => total + cur, 0));
+        }
     }
 
-    // renders next message
-    renderMsg() {
-        const msg = this.dotMsg.nextElementSibling;
-        msg.style.display = 'block';
-        this.chatBody.insertBefore(msg, this.dotMsg);
-    }
-
-    // counts time of pause between messages
+    // count time of pause between displaying two messages
     countTime(msg) {
         return Math.round(msg.children[0].textContent.length / 8) * 1000;
     }
 
-    // generates messages depending on what time is it now
-    generateMessages() {
-        const usersTime = new Date().getHours();
-        const altMsgs = document.querySelector('.alt-messages').innerHTML;
-
-        switch (true) {
-            case usersTime >= 5 && usersTime <= 9:
-                altMsgs = `
-                    <div class="message">
-                        <p>Morning is a great time to learn something new. So I won&apos;t waste your precious time and just come to the point.</p>
-                    </div>
-                `;
-            case usersTime >= 10 && usersTime <= 15:
-                altMsgs = `
-                    <div class="message">
-                        <p>What is the weather like today?</p>
-                    </div>
-                    <div class="message">
-                        <p>Hope it is pretty well.</p>
-                    </div>
-                    <div class="message">
-                        <p>But if it is not, I have a proposal that will make you forget about bad weather.</p>
-                    </div>
-                `;
-            case usersTime >= 16 && usersTime <= 23:
-                altMsgs = `
-                    <div class="message">
-                        <p>You are probably tired after a long day, so I won't bore you with long talks and just come to the point.</p>
-                    </div>
-                `;
-            case usersTime >= 0 && usersTime <= 4:
-                altMsgs = `
-                    <div class="message">
-                        <p>It's pretty late now. Hope you are not too tired to learn new things.</p>
-                    </div>
-                `;
-        };
+    // render messages with dot message between them
+    renderIntroduction(index, messages) {
+        setTimeout(() => {
+            if(index === messages.length - 1) {
+                // hide dot message after displaying last message
+                this.hideDotMessage();
+                this.requireAnswer();
+            }
+            
+            this.renderMsg();
+            this.scrollDown(this.chatBody);
+            
+        }, this.msgStarts[index] + 5500);
     }
 
-    // scrolls chat to its lowest point
+
+    displayDotMessage() {
+        this.dotMsg.style.display = 'block';
+    }
+
+    hideDotMessage() {
+        this.dotMsg.style.display = 'none';
+    }
+
+    // render message after dot message and after it switch their places
+    renderMsg() {
+        const msg = this.dotMsg.nextElementSibling;
+        msg.style.display = 'block';
+
+        
+        this.chatBody.insertBefore(msg, this.dotMsg);
+    }
+
+    // scroll given element to its lowest point
     scrollDown(element) {
         element.scrollTop = element.scrollHeight;
     }
 
-    // aplies blinking animation on message input and renders answers
+    // aplies blinking animation on message input and applies rendering of answers
     requireAnswer() {
-        const msgInput = document.querySelector('.msg-input');
-        msgInput.classList.add('require-interaction');
-
-        msgInput.addEventListener('click', () => this.renderAnswers());
+        this.msgInput.classList.add('require-interaction');
+        
+        this.msgInput.addEventListener('click', this.renderAns);
     }
 
     // renders answers and manages height of body and input of the chat
-    renderAnswers() {
-        const chatInput = document.querySelector('.chat-input');
-        const answersDiv = document.querySelector('.answers');
-        const prevHeight = parseInt(getComputedStyle(chatInput).height);
+    renderAnswers() { 
+        const prevHeight = parseInt(getComputedStyle(this.chatInput).height);
 
-        // initial height of chat input is 80px so function will not increase its height if it was incresed before
-        if(prevHeight === 80) {
+        // if current height of chat input is the same as initial change it
+        if (prevHeight === parseInt(this.CIinitialHeight)) {
+            const answersDiv = document.querySelector('.answers');
             answersDiv.style.display = "block";
 
-            const add = parseFloat(getComputedStyle(answersDiv).height);
-            const newHeight = Math.ceil(prevHeight + add) + 'px';
+            // how much space takes div with answers
+            const additionalHeight = parseFloat(getComputedStyle(answersDiv).height);
+            const newHeight = Math.ceil(prevHeight + additionalHeight) + 'px';
 
-            chatInput.style.setProperty('height', newHeight);
+            this.chatInput.style.height = newHeight;
 
             this.chatBody.style.height = `calc(100vh - ${newHeight}`;
+
+            // scroll chat body because answers will hide last messages
+            this.scrollDown(this.chatBody);
+
+            // change skip button's position to higher to not hide answers area
+            this.skipBtn.style.top = `${this.initialSkipTop - additionalHeight}px`;
         }
     }
 
-    // gives efect of typing answer
+    // gives an effect of typing an answer
     typeMessage(e) {
         let i = 0;
         const speed = 50;
         const text = e.currentTarget.children[0].textContent;
+        
+        this.msgInput.classList.remove('require-interaction');
 
-        const msgInput = document.querySelector('.msg-input');
-        msgInput.classList.remove('require-interaction');
-
-        const msgInputText = msgInput.querySelector('span');
+        const msgInputText = this.msgInput.querySelector('span');
         msgInputText.textContent = '';
         msgInputText.style.color = 'rgba(255, 255, 255, 0.616)';
 
         this.answer = e.currentTarget;
-        this.usersAgreement = [...this.answer.classList].includes('positive');
+        this.usersAgreement = this.answer.classList.contains('positive');
         
 
         const typeWriter = () => {
@@ -137,14 +170,13 @@ export default class StartPage {
                 // prevents two messages being typed at the same time
                 const reg = new RegExp(text.slice(0, i).replace(/[\.+*?(){}|^$]/g, "\\$&"));
                 const permission = reg.test(msgInputText.textContent);
-
                 if(permission) {
                     msgInputText.textContent += text.charAt(i);
                     i++;
                     setTimeout(typeWriter, speed);
                 }
                 // scrolldown answer when it is typed
-                this.scrollDown(msgInput);
+                this.scrollDown(this.msgInput);
             }
         };
 
@@ -152,48 +184,107 @@ export default class StartPage {
     }
 
     // renders new page if answer is positive and renders regret message if it is not
-    handleMsgSend(e) {
+    async handleMsgSend(e) {
         // do nothing if user didn't choose any answer
         if (!this.answer) return;
+        
+        this.handleAppearanceChanges();
+        this.preventNextSends(e);
 
-        if (this.usersAgreement) {
-            e.currentTarget.href = 'taskTemplate.html';
-            localStorage.setItem('currentChallenge', 'chessboard');
-            localStorage.setItem('undoneChallenge', 'chessboard');
-        } else {
-            document.querySelector('.answers').style.display = 'none';
-            document.querySelector('.chat-input').style.height = '80px';
-            this.chatBody.style.height = 'calc(100vh - 80px)';
+        const answerVer = this.answer.dataset.answer;
+        this.renderUsersAnswer(answerVer);
 
-            const regretMsg = document.createElement('div');
-            regretMsg.className = 'message';
-            regretMsg.innerHTML = `<p>Oh, in this case I'll not waste your time any more. Have a nice day &#x1F600</p>`;
-            regretMsg.style.display = 'block';
+        await this.renderLastMessage();
 
-            const sendBtn = e.currentTarget;
-            sendBtn.removeEventListener('click', this.handleSend);
+        if (this.usersAgreement) this.switchPage();
+    }
 
-            setTimeout(() => this.displayDotMessage(), 800);
-            setTimeout(() => {
-                this.displayDotMessage();
-                this.chatBody.appendChild(regretMsg);
-            }, 800 + this.countTime(regretMsg));
-        }
+    handleAppearanceChanges() {
+        // return msg input to initial state
+        this.msgInput.removeEventListener('click', this.renderAns);
+        const textEl = this.msgInput.querySelector('span');
+        textEl.textContent = 'Type a message...';
+        textEl.style.color = 'rgba(255, 255, 255, 0.3)';
+
+        // hide answers div
+        document.querySelector('.answers').style.display = 'none';
+        this.chatInput.style.height = this.CIinitialHeight;
+        this.chatBody.style.height = `calc(100vh - ${this.CIinitialHeight})`;
+
+        // return skip button to lower position
+        this.skipBtn.style.top = `${this.initialSkipTop}px`;
+    }
+
+    // prevent user from sending answer one more time
+    preventNextSends(e) {
+        const sendBtn = e.currentTarget;
+        sendBtn.removeEventListener('click', this.handleSend);
+    }
+
+    renderUsersAnswer(answerVer) {
+        // select containers that contain possible user's answers
+        const usersMsgs = [...document.querySelectorAll('.container')];
+        const properMsg = usersMsgs.find(msg => msg.dataset.answer === answerVer);
+        properMsg.children[0].style.display = 'block';
+        // to display dot message under users message
+        this.chatBody.insertBefore(properMsg, this.dotMsg);
+    }
+
+    async renderLastMessage() {
+        const msg = this.usersAgreement ? document.querySelector('.happy-msg') : document.querySelector('.regret-msg');
+        const renderDot = new Promise((resolve, reject) => {
+            setTimeout(() => resolve(true), 800);
+        });
+
+        const renderMsg = new Promise((resolve, reject) => {
+            setTimeout(() => resolve(true), this.countTime(msg) + 150);
+        });
+
+        const giveTimeToRead = new Promise((resolve, reject) => {
+            setTimeout(() => resolve(true), 4500);
+        });
+
+        await renderDot;
+        this.displayDotMessage();
+        this.scrollDown(this.chatBody);
+
+        await renderMsg;
+        this.hideDotMessage();
+        msg.style.display = 'block';
+        this.scrollDown(this.chatBody);
+
+        await giveTimeToRead;
+    }
+
+    switchPage() {
+        localStorage.setItem('currentChallenge', Object.keys(challenges)[0]);
+        localStorage.setItem('undoneChallenge', Object.keys(challenges)[0]);
+        window.location.href = './taskTemplate.html';
+    }
+
+    handleSkipBtnClick() {
+        localStorage.setItem('currentChallenge', Object.keys(challenges)[0]);
+        localStorage.setItem('undoneChallenge', Object.keys(challenges)[0]);
     }
 
     startChat() {
-        const messages = this.chatBody.querySelectorAll('.message:not(.dot-message):not(:first-child)');
+        // render messages depend on current users's time and only !after it select all .message elements
+        this.renderAltMessages();
 
+        const messages = this.chatBody.querySelectorAll('.message:not(.first-msg)');
+
+        // 2s after all messages were rendered start counting down
         setTimeout(() => this.displayDotMessage(), 2000);
+
+        this.createMsgsStarts(messages);
 
         for (let i = 0; i < messages.length; i++) this.renderIntroduction(i, messages);
 
-        document.querySelector('.chat-input a').addEventListener('click', this.handleSend);
+        // send icon
+        this.chatInput.querySelector('.send-icon').addEventListener('click', this.handleSend);
+
         document.querySelectorAll('.answer').forEach(ans => ans.addEventListener('click', (e) => this.typeMessage(e)));
 
-        document.querySelector('.skip-btn').addEventListener('click', (e) => {
-            this.answer = this.usersAgreement = true;
-            this.handleMsgSend(e);
-        })
+        document.querySelector('.skip-btn').addEventListener('click', () => this.handleSkipBtnClick());
     }
 }

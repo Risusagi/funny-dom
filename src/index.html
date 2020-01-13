@@ -14,77 +14,102 @@
             <span class="status">online</span> 
         </div>
 
+        <!-- CHAT BODY START -->
         <div class="chat-body">
-        
-            <div class="message first-msg">
+
+            <div class="fd-msg message first-msg">
                 <p>Hello. Nice to meet you &#x1F60A</p>
             </div>
 
-            <div class="message dot-message">
+            <div class="fd-msg dot-message">
                 <span class="dot"></span>
                 <span class="dot"></span>
                 <span class="dot"></span>
             </div>
 
-            <div class="alt-messages"></div>
-
-            <div class="message">
-                <p>I've heard you have been learning the Document Object Model for some time and now want to use this knowledge in practice.</p>
+            <div class="fd-msg message">
+                <p>I've heard you have been learning the Document Object Model for some time and now want to use it in practice.</p>
             </div>
 
-            <div class="message">
-                <p>I'm going to an interesting but not an easy trip. So I just thought we can help each other.</p>
+            <div class="fd-msg message">
+                <p>I have several tasks that require knowledge of how to modify DOM, but I don't have enough time for all of them.</p>
             </div>
 
-            <div class="message">
-                <p>You'll get some experience of how to work with DOM and I will have an assistant. Win-win&#x1F60A
-                </p>
+            <div class="fd-msg message">
+                <p>That's why I want to ask you to help me a little bit.</p>
             </div>
 
-            <div class="message">
+            <div class="fd-msg message">
+                <p>You'll get some experience of how to work with DOM and I will have an assistant. Win-win&#x1F60A</p>
+            </div>
+
+            <div class="fd-msg message">
                 <p>What do you think about it?</p>
             </div>
+            
+            <div class="container" data-answer="pos1">
+                <div class="users-msg">
+                    <p>Gladly &#x1F60A When we go?</p>
+                </div>
+            </div>
 
-            <a class="skip-btn" href="#">Skip</a>
+            <div class="container" data-answer="neg">
+                <div class="users-msg">
+                    <p>Sorry, not this time</p>
+                </div>
+            </div>
+
+            <div class="container" data-answer="pos2">
+                <div class="users-msg">
+                    <p>Sounds interesting. I'll give you a chance &#x1F603</p>
+                </div>
+            </div>
+
+            <div class="fd-msg happy-msg">
+                <p>Cool. Let's get it &#x1F91F</p>
+            </div>
+
+            <div class="fd-msg regret-msg">
+                <p>Oh... In this case I'll not waste your time any more. Have a nice day &#x1F600</p>
+            </div>
+
+            <a class="skip-btn" href="./taskTemplate.html">Skip</a>
             
         </div>
+        <!-- CHAT BODY END -->
 
         <!-- CHAT INPUT START -->
         <div class="chat-input">
 
             <div class="answers">
 
-                <div class="answer positive">
+                <div class="answer positive" data-answer="pos1">
                     <p>Gladly &#x1F60A When we go?</p>
                 </div>
 
-                <div class="answer negative">
+                <div class="answer negative" data-answer="neg">
                     <p>Sorry, not this time</p>
                 </div>
 
-                <div class="answer positive">
+                <div class="answer positive" data-answer="pos2">
                     <p>Sounds interesting. I'll give you a chance &#x1F603</p>
                 </div>
-
+                
             </div>
 
             <div class="input-panel">
-
                 <div class="msg-input">
                     <span>Type a message...</span>
                 </div>
-
-                <a>
-                    <svg class="send-icon" role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="sendIconTitle">
-                        <title id="sendIconTitle">Send</title>
-                        <polygon points="21.368 12.001 3 21.609 3 14 11 12 3 9.794 3 2.394"></polygon>
-                    </svg>
-                </a>
-
+                
+                <svg class="send-icon" role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-labelledby="sendIconTitle">
+                    <title id="sendIconTitle">Send</title>
+                    <polygon points="21.368 12.001 3 21.609 3 14 11 12 3 9.794 3 2.394"></polygon>
+                </svg>
             </div>
 
         </div>
-
+        <!-- CHAT INPUT END -->
     </div>
 </body>
 </html>
