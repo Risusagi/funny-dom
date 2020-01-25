@@ -1,5 +1,6 @@
 import '../style/chessboard.scss';
 
+// create example chessboard
 (function () {
     const rows = document.querySelectorAll('.ex-row');
     rows.forEach((row, i) => {
@@ -11,6 +12,7 @@ import '../style/chessboard.scss';
     });
 })();
 
+// add hint out of list of useful links to MDN
 (function() {
     const doc = window.frameElement.parentElement;
 
@@ -18,5 +20,15 @@ import '../style/chessboard.scss';
     hint.className = 'text-hint';
     hint.textContent = 'Remember that indexes start from 0 not from 1.';
     
-    doc.parentElement.querySelector('.hints-for-user').appendChild(hint);
+    const childElements = doc.parentElement.querySelector('.hints-for-user').children;
+    const additionalHint = childElements[childElements.length - 1];
+
+    if(!additionalHint.classList.contains('text-hint')) {
+        doc.parentElement.querySelector('.hints-for-user').appendChild(hint);
+    }    
 })();
+
+// delete message about indexes to not show it inside hints list for other challenges
+window.onunload = () => {
+    window.frameElement.parentElement.querySelector('.hints-for-user').lastChild.remove();
+}
