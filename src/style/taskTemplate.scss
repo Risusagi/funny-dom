@@ -8,10 +8,24 @@
 $shadow: rgb(138, 212, 200);
 $panel-color: rgb(0, 24, 32);
 $text-color: rgb(200, 199, 209);
+$height-to-redistribute: calc((100vh - 310px) / 5);
+$min-height: 90px;
+
+
+@mixin setColumns($left, $right) {
+    body {
+        grid-template-columns: $left $right;
+    }
+
+    .pop-up {
+        left: $left + $right / 2;
+    }
+}
 
 * {
-    font-family: 'Asap', Arial, sans-serif;
+    line-height: 1.5em;
 }
+
 body {
     min-height: 100vh;
     overflow-x: hidden;
@@ -21,24 +35,12 @@ body {
     color: rgb(196, 97, 97);
 }
 
-.src-link {
-    color: rgb(112, 134, 255);
-}
-
 .attribute-name {
     color: rgb(255, 178, 78);
 }
 
 .tag-name {
     color: rgb(129, 255, 129);
-}
-
-.css-property {
-    color: rgb(209, 187, 230);
-}
-
-.variable-name {
-    color: rgb(176, 97, 196);
 }
 
 .hint {
@@ -70,7 +72,7 @@ iframe {
     min-height: 50vh;
     padding: 15px 10px;
     letter-spacing: 1px;
-    margin-top: -3px;
+    margin-top: -6px;
     &::after {
         content: "";
         display: table;
@@ -79,6 +81,7 @@ iframe {
 }
 
 h1 {
+    line-height: 1.15em;
     margin: 0;
     text-align: center;
     color: $panel-color;
@@ -99,6 +102,7 @@ h1 {
 
 .task-title {
     color: $panel-color;
+    line-height: 1.2em;
     text-shadow: 1px 1px 1px $shadow,
                 -1px 1px 1px $shadow,
                 1px -1px 1px $shadow,
@@ -106,11 +110,10 @@ h1 {
     padding-top: 30px;
 }
 
-ol.list-of-tasks {
-    line-height: 1.35em;
+.list-of-tasks {
     list-style-position: inside;
     padding-left: 10px;
-    margin-bottom: 7px;
+    margin-bottom: 17px;
     li:not(:last-child) {
         margin-bottom: 8px;
     }
@@ -151,6 +154,7 @@ button[disabled] {
 
 .CodeMirror {
     animation-duration: .5s;
+    min-height: $min-height;
 }
 // animation for wrong made task
 @keyframes boomer {
@@ -160,24 +164,22 @@ button[disabled] {
 }
 
 
-.hints-for-user {
-    position: absolute;
+.pop-up {
+    position: fixed;
     z-index: 100;
-    top: 0;
+    top: 10vh;
     left: 50%;
     transform: translateX(-50%);
     width: 90%;
+    max-width: 416px;
     min-height: 200px;
-    background-color: #002240;
     padding: 10px;
     border-radius: 7px;
-    box-shadow: 0 0 5px 1px rgb(184, 207, 238);
     text-shadow: 0 1px 2px black;
     display: none;
     overflow-wrap: break-word;
-    p {
-        margin-top: 10px;
-    }
+    background-color: #002240;
+    box-shadow: 0 0 5px 1px rgb(184, 207, 238);
 }
 button.close {
     float: right;
@@ -195,7 +197,7 @@ button.close {
 }
 .links-list {
     padding-left: 14px;
-    line-height: 1.5em;
+    line-height: 2em;
     a {
         text-decoration: none;
         color: $text-color;    
@@ -207,6 +209,27 @@ button.close {
         }
 
     }
+}
+.hints-for-user p {
+        margin-top: 10px;
+}
+
+.error-alert {
+    $height: 150px;
+
+    min-height: $height;
+    
+    .content {
+        width: 100%;
+        min-height: $height - 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+.CodeMirror {
+    height: calc(#{$height-to-redistribute} * 3);
 }
 
 @media (min-width: 205px) {
@@ -236,7 +259,7 @@ button.close {
     .task-title {
         padding-top: 0px;
     }
-    ol.list-of-tasks {
+    .list-of-tasks {
         padding-left: 25px;
     }
     .links-list {
@@ -245,41 +268,75 @@ button.close {
 }
 
 @media (min-width: 612px) {
-    .hints-for-user {
+    .pop-up {
         width: 65%;
         padding-left: 20px;
     }
 }
 @media (min-width: 807px) {
-    .hints-for-user {
+    .pop-up {
         width: 55%;
     }
 }
 
+// landscape orientation of the page
 @media (min-width: 1007px) {
+    @include setColumns(34%, 66%);
+
+    body {
+        display: grid;
+        justify-items: stretch;
+    }
     iframe {
-        width: 34%;
-        float: left;
-        height: 100vh;
+        height: 100%;
     }
     .task-panel {
-        width: 66%;
-        float: right;
-        height: 100vh;
+        min-height: 100vh;
         margin-top: 0;
+        padding: 15px 3vw;
+    }
+    .list-of-tasks {
+        height: calc(#{$height-to-redistribute} * 2);
+        overflow-y: auto;
+        min-height: $min-height;
+
+        // scrollbar
+        &::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        &::-webkit-scrollbar-track {
+            border-radius: 4px;
+            background-color: rgb(143, 169, 182);
+        }
+
+        &::-webkit-scrollbar-thumb {
+            border-radius: 4px;
+            background: rgb(44, 62, 78);
+        }
+
+        &::-webkit-scrollbar-thumb:hover {
+            background: rgb(16, 50, 63);
+        }
     }
 }
+
 @media (min-width: 1050px) {
-    .hints-for-user {
+    .pop-up {
         width: 45%;
     }
 }
-@media (min-width: 1250px) {
-    iframe {
-        width: 40%;
-    }
+@media (min-width: 1115px) {
+    $height-to-redistribute: calc((100vh - 285px) / 5);
 
-    .task-panel {
-        width: 60%;
+    .list-of-tasks {
+        height: calc(#{$height-to-redistribute} * 2);
     }
+    .CodeMirror {
+        height: calc(#{$height-to-redistribute} * 3);
+    }
+}  
+
+@media (min-width: 1250px) {
+    @include setColumns(40%, 60%);
 }

@@ -1,5 +1,7 @@
 @import './modern-normalize.css';
 
+$border-thickness: 3px;
+
 @mixin sizing($size, $difference) {
     $inner-size: $size - $difference * 2;
 
@@ -22,7 +24,7 @@
     .ex-row,
     .row {
         display: flex;
-        height: calc(#{$inner-size} / 8);
+        height: calc((#{$inner-size} - #{$border-thickness} * 2) / 8);
     }
 
     .ex-cell,
@@ -59,7 +61,7 @@ body {
 }
 
 .chessboard {
-    border: 3px solid rgb(49, 49, 49);
+    border: $border-thickness solid rgb(49, 49, 49);
     background-color: white;
     position: absolute;
     display: flex;

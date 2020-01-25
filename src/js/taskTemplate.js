@@ -5,14 +5,22 @@ import './codemirror/addon/scroll/simplescrollbars.js';
 import '../style/taskTemplate.scss';
 import {challenges} from './challenges.js';
 
+const alertError = (message) => {
+    const errorPopUp = document.querySelector('.error-alert');
+    errorPopUp.querySelector('p').textContent = message.replace(/iframeDoc/g, 'document');
+    errorPopUp.style.display = 'block';
+}
 
-// window.addEventListener('error', function (event) {
-//     console.log(event.message);
-//     app.playAnimation();
-//     event.preventDefault();
-// })
+window.addEventListener('error', (event) => {
+    app.playAnimation();
+    event.preventDefault();
+    alertError(event.message);
+});
 
-export const myCodeMirror = CodeMirror.fromTextArea(document.querySelector('.editor'),
+// current challenge is a task on whose page user is at that moment
+// undone challenge is the first challenge from challenges that weren't done
+
+const myCodeMirror = CodeMirror.fromTextArea(document.querySelector('.editor'),
     {
         mode: "javascript",
         theme: "cobalt",
@@ -22,17 +30,48 @@ export const myCodeMirror = CodeMirror.fromTextArea(document.querySelector('.edi
     }
 );
 
-export const app = {
+const app = {
     editorArea: document.querySelector('.CodeMirror'),
     contentHandler: document.querySelector('.editor'),
     iframe: document.querySelector('iframe'),
+    challengesNav: document.querySelector('.challenges-navigation'),
+    
+    // create list of challenges inside the side panel
+    renderChallengesList() {
+        const challengesList = document.querySelector('.challenges-list');
+        // render list from scratch without doubling items
+        challengesList.innerHTML = '';
 
-    playAnimation() {
-        this.editorArea.style.setProperty('animation-name', 'boomer');
+        for (let challenge in challenges) {
+            const li = document.createElement('li');
+            li.textContent = challenges[challenge].title;
+            challengesList.appendChild(li);
+            // for the list item created for this challenge
+            this.separateChallenges(challenge, li);
+        }
     },
-    removeAnimation(e) {
-       e.currentTarget.removeAttribute('style');
+
+    // mark current challenge and the ones that were done previously
+    separateChallenges(challenge, li) {
+        const challengesAbbrs = Object.keys(challenges);
+        const firstUndone = localStorage.getItem('undoneChallenge');
+        const index = challengesAbbrs.indexOf(firstUndone);
+        const current = localStorage.getItem('currentChallenge');
+
+
+        if (challenge === current) {
+            li.classList.add('current');
+        } else if (challengesAbbrs.indexOf(challenge) <= index) {
+            // tasks that are done plus one that is not done yet, except currently displayed task
+            li.classList.add('available');
+            // mark clicked available challenge as current and rerender page
+            li.addEventListener('click', () => {
+                localStorage.setItem('currentChallenge', challenge);
+                this.render(localStorage.getItem('currentChallenge'));
+            });
+        }
     },
+    
     applyCode() {
         // copy the content of the editor into the textarea
         myCodeMirror.save();
@@ -42,17 +81,71 @@ export const app = {
         if (!codeFromUser) {
             this.playAnimation();
         } else {
+            // apply user's code to challenge's page not to the whole page
             this.functionFromUser = new Function(
                 `const iframeDoc = this.iframe.contentDocument;
-                const iframeWindow = this.iframe.contentWindow;
                 ${codeFromUser.replace(/document/g, 'iframeDoc')}`
             );
             this.functionFromUser();
         }
     },
+
+    playAnimation() {
+        this.editorArea.style.setProperty('animation-name', 'boomer');
+    },
+    
+    checkSolution(challengeName) {
+        const checkPoints = challenges[challengeName].checkPoints(this.functionFromUser);
+        const challengeFinished = checkPoints.every(point => point);
+
+        this.markFinishedTasks(checkPoints);
+
+        if (challengeFinished) {
+            this.giveAccessToNextTask();
+            this.saveUsersProgress(challengeName);
+        }
+        
+    },
+
+    // if task is done reduce its opacity but if part of the solution was deleted uncheck this task
+    markFinishedTasks(checkPoints) {
+        const tasks = document.querySelectorAll('.list-of-tasks>li');
+        tasks.forEach((task, i) => {
+            task.style.opacity = checkPoints[i] ? '.4' : '1';
+        });
+    },
+
+    giveAccessToNextTask() {
+        document.querySelector('.next-task-btn').removeAttribute('disabled');
+    },
+
+    // save user's progress in localStorage
+    saveUsersProgress(taskTitle) {
+        const challengesNames = Object.keys(challenges);
+        const lastFinishedIndex = challengesNames.indexOf(taskTitle);
+        const currentUndoneIndex = challengesNames.indexOf(localStorage.getItem('undoneChallenge'));
+
+        // don't change undone challange if next button would be clicked in earlier task then current undone
+        if (lastFinishedIndex >= currentUndoneIndex) {
+            const firstNotFinishedTask = challengesNames[lastFinishedIndex + 1];
+            if (firstNotFinishedTask) localStorage.setItem('undoneChallenge', firstNotFinishedTask);
+        }
+
+    },
+
+    // remove animation from code editor when it is ended
+    removeAnimation(e) {
+        e.currentTarget.removeAttribute('style');
+    },
+
+    
+    handleHintClick(e, hints) {
+        const index = e.target.dataset.index;
+        this.renderHints(hints[index]);
+    },
+    
+    // render set of hints binded to clicked hint image
     renderHints(hints) {
-        const scrollValue = document.querySelector(':root').scrollTop;
-        document.querySelector('.hints-for-user').style.top = `calc(${scrollValue}px + 10vh)`;
         const list = document.querySelector('.links-list');
         list.innerHTML = '';
         hints.map(hint => {
@@ -64,83 +157,13 @@ export const app = {
         });
         document.querySelector('.hints-for-user').style.display = 'block';
     },
-    handleHintClick(e, hints) {
-        const index = e.target.dataset.index;
-        this.renderHints(hints[index]);
+    
+    // hide div with hints
+    hidePopUp(popUp) {
+        popUp.style.display = 'none';
     },
-    hideHints() {
-        document.querySelector('.hints-for-user').style.display = 'none';
-    },
-    checkSolution(challengeName) {
-        const checkPoints = challenges[challengeName].checkPoints(this.functionFromUser);
-        const challengeFinished = checkPoints.every(point => point);
 
-        this.markFinishedTasks(checkPoints);
-        if (challengeFinished) {
-            this.giveAccessToNextTask();
-            this.saveUsersProgress(challengeName);
-        }
-        
-    },
-    // if task is done reduce its opacity but if part of the solution was deleted uncheck this task
-    markFinishedTasks(checkPoints) {
-        const tasks = document.querySelectorAll('.list-of-tasks>li');
-        tasks.forEach((task, i) => {
-            task.style.opacity = checkPoints[i] ? '.4' : '1';
-        });
-    },
-    giveAccessToNextTask() {
-        document.querySelector('.next-task-btn').removeAttribute('disabled');
-    },
-    saveUsersProgress(taskTitle) {
-        const challengesNames = Object.keys(challenges);
-        const lastFinishedIndex = challengesNames.indexOf(taskTitle);
-        const currentUndoneIndex = challengesNames.indexOf(localStorage.getItem('undoneChallenge'));
-
-        // don't change undone challnge if next would be clicked in earlier task then current undone
-        if (lastFinishedIndex >= currentUndoneIndex) {
-            const firstNotFinishedTask = challengesNames[lastFinishedIndex + 1];
-            localStorage.setItem('undoneChallenge', firstNotFinishedTask);
-        }
-        
-    },
-    renderChallengesList() {
-        const challengesList = document.querySelector('.challenges-list');
-        challengesList.innerHTML = '';
-        
-        for (let challenge in challenges) {
-            const li = document.createElement('li');
-            li.textContent = challenges[challenge].title;
-            challengesList.appendChild(li);
-            // for the list item cretaed for this challenge
-            this.separateChallenges(challenge, li);
-        }
-    },
-    separateChallenges(challenge, li) {
-        const challengesAbbr = Object.keys(challenges);
-        const firstUndone = localStorage.getItem('undoneChallenge');
-        const index = challengesAbbr.indexOf(firstUndone);
-        const current = localStorage.getItem('currentChallenge');
-        
-        if (challenge === current) {
-            li.classList.add('current');
-        } else if (challengesAbbr.indexOf(challenge) <= index) {
-            // all list items except current challenge li
-            li.classList.add('available');
-            li.addEventListener('click', () => {
-                localStorage.setItem('currentChallenge', challenge);
-                this.render(localStorage.getItem('currentChallenge'));
-            });
-        }
-    },
-    handleEscEvent(e) {
-        if(e.keyCode !== 27) return;
-        this.hideHints();
-        this.hideChallengesNav();
-    },
-    hideChallengesNav() {
-        document.querySelector('.challenges-navigation').classList.remove('visible');
-    },
+    // go to tne next task
     handleNextClick() {
         const undone = localStorage.getItem('undoneChallenge');
 
@@ -148,10 +171,37 @@ export const app = {
 
         this.render(undone);
     },
+        
+    displayChallengesNav() {
+        this.challengesNav.classList.add('visible')
+    },
+    hideChallengesNav() {
+        this.challengesNav.classList.remove('visible');
+    },    
+
+    // hide hints and challenges list on Esc click
+    handleEscEvent(e) {
+        if(e.keyCode !== 27) return;
+        this.hidePopUp(document.querySelector('.error-alert'));
+        this.hidePopUp(document.querySelector('.hints-for-user'));
+        this.hideChallengesNav();
+    },
+    
+    hideNavOnClick(e) {
+        const navChildren = [...document.querySelectorAll('.challenges-navigation *')];
+        const logo = document.querySelector('h1');
+        if (e.target !== this.challengesNav && !navChildren.includes(e.target) && e.target !== logo) {
+            // hide navigation if space outside of it was clicked
+            this.hideChallengesNav();
+        }
+    },
+    
     // add event listeners only when page rendered first time
     firstRender() {
         this.render(localStorage.getItem('currentChallenge'));
         
+        // reload page inside iframe every time user aplies his/her code
+        // because of this it will work like making changes inside apllicetion documents (don't cumulate effects from previous versions of code)
         document.querySelector('.run-code-btn').addEventListener('click', () => this.iframe.contentWindow.location.reload(true));
 
         this.iframe.addEventListener('load', () => {
@@ -161,33 +211,21 @@ export const app = {
             this.checkSolution(this.task);
         });
         this.editorArea.addEventListener('animationend', (e) => this.removeAnimation(e));
-
-        document.querySelectorAll('img.hint').forEach(hint => {
-            hint.addEventListener('click', (e) => this.handleHintClick(e, this.hints));
-        });
-        document.querySelector('button.close').addEventListener('click', () => this.hideHints());
+       
+        document.querySelectorAll('button.close').forEach(btn => btn.addEventListener('click', (e) => this.hidePopUp(e.currentTarget.closest('div'))));
         document.querySelector('.next-task-btn').addEventListener('click', () => this.handleNextClick());
 
         // for smooth animation
-        document.querySelector('.challenges-navigation').style.transition = 'transform .5s ease-in';
+        this.challengesNav.style.transition = 'transform .5s ease-in';
 
-        document.querySelector('h1').addEventListener('click', () => document.querySelector('.challenges-navigation').classList.add('visible'));
+        document.querySelector('h1').addEventListener('click', () => this.displayChallengesNav());
         document.querySelector('.close-nav').addEventListener('click', () => this.hideChallengesNav());
 
         window.addEventListener('keydown', (e) => this.handleEscEvent(e));
-        window.addEventListener('click', (e) => {
-            const nav = document.querySelector('.challenges-navigation');
-            const navChildren = [...document.querySelectorAll('.challenges-navigation *')];
-            const logo = document.querySelector('h1');
-            if (e.target !== nav && !navChildren.includes(e.target) && e.target !== logo) {
-                // hide navigation if space outside of it was clicked
-                this.hideChallengesNav();
-            }
-        });
+        window.addEventListener('click', (e) => this.hideNavOnClick(e));
     },
+
     render(taskToRender) {
-        // this.task = localStorage.getItem('currentChallenge');
-        
         this.task = taskToRender;
 
         if (this.task) this.renderChallengesList();
@@ -195,18 +233,23 @@ export const app = {
         const {link, title, tasks, hints, description} = challenges[this.task];
         this.hints = hints;
 
-        // disable button after it was made available
-        document.querySelector('.next-task-btn').setAttribute('disabled', true);
+        // disable button after it was made available after compliting of previous task
+        const nextTaskBtn = document.querySelector('.next-task-btn');
+        nextTaskBtn.setAttribute('disabled', true);
+        
         // clear code editor
         myCodeMirror.setValue('');
 
+        // apply parameters taken from current challenge's object (data)
         this.iframe.src = link;
         document.querySelector('.task-title').textContent = title;
         document.querySelector('.list-of-tasks').innerHTML = tasks;
         document.querySelector('.description').innerHTML = description;
+
+        document.querySelectorAll('img.hint').forEach(hint => hint.addEventListener('click', (e) => this.handleHintClick(e, this.hints)));
+
+        nextTaskBtn.style.display = Object.keys(challenges).indexOf(this.task) === Object.keys(challenges).length - 1 ? 'none' : 'block';
     }
 };
 
-localStorage.setItem('undoneChallenge', 'crashedCarousel');
-localStorage.setItem('currentChallenge', 'crashedCarousel');
 app.firstRender();
