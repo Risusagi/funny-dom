@@ -11,11 +11,11 @@ const alertError = (message) => {
     errorPopUp.style.display = 'block';
 }
 
-window.addEventListener('error', (event) => {
-    app.playAnimation();
-    event.preventDefault();
-    alertError(event.message);
-});
+// window.addEventListener('error', (event) => {
+//     app.playAnimation();
+//     event.preventDefault();
+//     alertError(event.message);
+// });
 
 // current challenge is a task on whose page user is at that moment
 // undone challenge is the first challenge from challenges that weren't done
@@ -196,6 +196,29 @@ const app = {
         }
     },
     
+    renderTutorial() {
+        document.querySelectorAll('.task-title, .description, .list-of-tasks, h3').forEach(el => el.classList.add('hide'));
+
+        const els = ['h1', '.CodeMirror', '.run-code-btn', 'iframe', '.next-task-btn'];
+        
+        this.tutElements = els.map(el => document.querySelector(el));
+        
+        this.counter = 0;
+        this.revealElement();
+    },
+
+    revealElement() {
+        this.tutElements.forEach((el, i) => {
+            if (i === this.counter) {
+                el.classList.remove('hide');
+            } else {
+                el.classList.add('hide');
+            }
+        });
+        if(this.counter === this.tutElements.length -1) console.log('STOP')
+        this.counter++;
+    },
+
     // add event listeners only when page rendered first time
     firstRender() {
         this.render(localStorage.getItem('currentChallenge'));
@@ -223,6 +246,9 @@ const app = {
 
         window.addEventListener('keydown', (e) => this.handleEscEvent(e));
         window.addEventListener('click', (e) => this.hideNavOnClick(e));
+
+        this.renderTutorial();
+        document.querySelector('.next-tutorial').addEventListener('click', () => this.revealElement());
     },
 
     render(taskToRender) {
