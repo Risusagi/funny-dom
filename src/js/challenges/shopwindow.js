@@ -7,11 +7,11 @@ const shopwindow =  {
     tasks: `
             <li>
                 Move first child of the element with a <span class="class-name">bottom-shelf</span> class (doll on the left side of the bottom shelf) to its previous sibling element (top shelf) so that it become its last child.
-                <img src="../img/hint.png" class="hint" data-index="0" title="Show some hints">
+                <img src="img/hint.png" class="hint" data-index="0" title="Show some hints">
             </li>
             <li>
                 Write prices for toys that have an empty price tag (element whose list of classes contains class <span class="class-name">price</span>). Dolls cost 15 and bears &#x2012 50. Dolls have a <span class="class-name">doll</span> class on their lists of classes and bears &#x2012 a <span class="class-name">bear</span> class.
-                <img src="../img/hint.png" class="hint" data-index="1" title="Show some hints">
+                <img src="img/hint.png" class="hint" data-index="1" title="Show some hints">
             </li>
         `,
     hints: [

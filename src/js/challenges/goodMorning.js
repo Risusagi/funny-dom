@@ -12,7 +12,7 @@ const goodMorning = {
                     <li><span class="class-name">grass</span>.</li>
                 </ul>
                 Add to their classes' lists a class <span class="class-name">morning</span>.
-                <img src="../img/hint.png" class="hint" data-index="0" title="Show some hints">
+                <img src="img/hint.png" class="hint" data-index="0" title="Show some hints">
             </li>
             <li>
                 Select element that has a <span class="class-name">moon</span> class among its classes and delete this element (there are at least two ways you can do it).
@@ -22,7 +22,7 @@ const goodMorning = {
             </li>
             <li>
                 Select all elements that have a class <span class="class-name">window</span>. Replace their class <span class="class-name">asleep</span> with a new one: <span class="class-name">awake</span>.
-                <img src="../img/hint.png" class="hint" data-index="1" title="Show some hints">
+                <img src="img/hint.png" class="hint" data-index="1" title="Show some hints">
             </li>
         `,
     hints: [

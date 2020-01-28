@@ -8,11 +8,11 @@ const newBlinds = {
             <li>
                 Inside elements that has one of the next classes: <span class="class-name">outer-width,</span>
                 <span class="class-name">outer-height</span> select the child element with a <span class="class-name">size</span> class (one inside each). Inside that elements write value of the width and height of the element whose classes' list includes a <span class="class-name">window</span> class. <strong>Only integers (rounded up) without units are accepted.</strong>
-                <img src="../img/hint.png" class="hint" data-index="0" title="Show some hints">
+                <img src="img/hint.png" class="hint" data-index="0" title="Show some hints">
             </li>
             <li>
                 Do the same for elements with a <span class="class-name">size</span> class inside elements that have an <span class="class-name">inner-width</span> or <span class="class-name">inner-height</span> classes. Give them value of the width and height of the content of the same element but <em>without</em> its border width.
-                <img src="../img/hint.png" class="hint" data-index="1" title="Show some hints">
+                <img src="img/hint.png" class="hint" data-index="1" title="Show some hints">
             </li>
         `,
     hints: [

@@ -13,7 +13,7 @@ const crashedCarousel = {
             </li>
             <li>
                 Add signatures inside empty <span class="tag-name">figcaption</span> elements. You'll find proper text for every signature inside <span class="attribute-name">data-description</span> attributes of <span class="tag-name">figcaption's</span> parent element that has a <span class="class-name">slide</span> class.
-                <img src="../img/hint.png" class="hint" data-index="0" title="Show some hints">
+                <img src="img/hint.png" class="hint" data-index="0" title="Show some hints">
             </li>
         `,
     hints: [

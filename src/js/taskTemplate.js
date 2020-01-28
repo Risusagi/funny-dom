@@ -11,11 +11,11 @@ const alertError = (message) => {
     errorPopUp.style.display = 'block';
 }
 
-// window.addEventListener('error', (event) => {
-//     app.playAnimation();
-//     event.preventDefault();
-//     alertError(event.message);
-// });
+window.addEventListener('error', (event) => {
+    app.playAnimation();
+    event.preventDefault();
+    alertError(event.message);
+});
 
 // current challenge is a task on whose page user is at that moment
 // undone challenge is the first challenge from challenges that weren't done

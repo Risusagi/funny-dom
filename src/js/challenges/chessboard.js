@@ -10,7 +10,7 @@ const chessboard = {
             </li>
             <li>
                 Each row has <span class="attribute-name">data-num</span> attribute equal to odd or even number. Inside each odd row (according to its <span class="attribute-name">data-num</span> attribute value) set background color of its children to black if their index is even. Do the same for odd cells inside even rows.
-                <img src="../img/hint.png" class="hint" data-index="0" title="Show some hints">
+                <img src="img/hint.png" class="hint" data-index="0" title="Show some hints">
             </li>
         `,
     hints: [

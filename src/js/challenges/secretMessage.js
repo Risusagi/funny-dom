@@ -7,11 +7,11 @@ const secretMessage = {
     tasks: `
             <li>
                 Select all images located inside <span class="tag-name">blockquote</span> element and replace them with the text held in their <span class="attribute-name">alt</span> attributes. (There is only one blockquote and images are not its direct children.)
-                <img src="../img/hint.png" class="hint" data-index="0" title="Show some hints">
+                <img src="img/hint.png" class="hint" data-index="0" title="Show some hints">
             </li>
             <li>
                 Delete all images that weren't replaced with a text.
-                <img src="../img/hint.png" class="hint" data-index="1" title="Show some hints">
+                <img src="img/hint.png" class="hint" data-index="1" title="Show some hints">
             </li>
         `,
     hints: [
