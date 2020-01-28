@@ -1,3 +1,4 @@
+import regeneratorRuntime from "regenerator-runtime";
 import '../style/index.scss';
 import StartPage from './StartPage';
 import '../taskTemplate.html';
