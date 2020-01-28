@@ -257,14 +257,15 @@ export default class StartPage {
     }
 
     switchPage() {
-        localStorage.setItem('currentChallenge', Object.keys(challenges)[0]);
-        localStorage.setItem('undoneChallenge', Object.keys(challenges)[0]);
+        this.setLocalStorage();
         window.location.href = './taskTemplate.html';
     }
 
-    handleSkipBtnClick() {
+    // set all needed values in local storage before switching to the next page (taskTemplate)
+    setLocalStorage() {
         localStorage.setItem('currentChallenge', Object.keys(challenges)[0]);
         localStorage.setItem('undoneChallenge', Object.keys(challenges)[0]);
+        localStorage.setItem('renderTutorial', 'yes');
     }
 
     startChat() {
@@ -285,6 +286,6 @@ export default class StartPage {
 
         document.querySelectorAll('.answer').forEach(ans => ans.addEventListener('click', (e) => this.typeMessage(e)));
 
-        document.querySelector('.skip-btn').addEventListener('click', () => this.handleSkipBtnClick());
+        document.querySelector('.skip-btn').addEventListener('click', () => this.setLocalStorage());
     }
 }

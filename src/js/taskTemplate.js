@@ -170,11 +170,23 @@ const app = {
         localStorage.setItem('currentChallenge', undone);
 
         this.render(undone);
-    },
         
-    displayChallengesNav() {
-        this.challengesNav.classList.add('visible')
+        if (localStorage.getItem('renderTutorial') === 'yes') {
+            this.renderTutorial();
+        }
     },
+
+    // display the list of challenges
+    displayChallengesNav() {
+        this.challengesNav.classList.add('visible');
+
+        if (localStorage.getItem('renderTutorial') === 'yes') {
+            //prevent tutorial from rendering every time next button is clicked
+            localStorage.setItem('renderTutorial', 'no');
+            this.hideTutorial();
+        }
+    },
+
     hideChallengesNav() {
         this.challengesNav.classList.remove('visible');
     },    
@@ -196,27 +208,18 @@ const app = {
         }
     },
     
+    // render tutorial about how to work with app
+    // only about the list challenges at this moment
     renderTutorial() {
-        document.querySelectorAll('.task-title, .description, .list-of-tasks, h3').forEach(el => el.classList.add('hide'));
+        // make opacity of all elements except ones that are parts of tutorial (h1, tip, arrow, challenges list)
+        document.querySelectorAll('iframe, .task-panel>*:not(.tutorial-element)').forEach(el => el.classList.add('hide'));
 
-        const els = ['h1', '.CodeMirror', '.run-code-btn', 'iframe', '.next-task-btn'];
-        
-        this.tutElements = els.map(el => document.querySelector(el));
-        
-        this.counter = 0;
-        this.revealElement();
+        document.querySelectorAll('.tutorial-tip, .tutorial-arrow').forEach(el => el.style.display = 'block');
     },
 
-    revealElement() {
-        this.tutElements.forEach((el, i) => {
-            if (i === this.counter) {
-                el.classList.remove('hide');
-            } else {
-                el.classList.add('hide');
-            }
-        });
-        if(this.counter === this.tutElements.length -1) console.log('STOP')
-        this.counter++;
+    hideTutorial() {
+        document.querySelectorAll('.tutorial-tip, .tutorial-arrow').forEach(el => el.style.display = 'none');
+        document.querySelectorAll('.hide').forEach(el => el.classList.remove('hide'));
     },
 
     // add event listeners only when page rendered first time
@@ -246,9 +249,6 @@ const app = {
 
         window.addEventListener('keydown', (e) => this.handleEscEvent(e));
         window.addEventListener('click', (e) => this.hideNavOnClick(e));
-
-        this.renderTutorial();
-        document.querySelector('.next-tutorial').addEventListener('click', () => this.revealElement());
     },
 
     render(taskToRender) {
