@@ -258,7 +258,7 @@ export default class StartPage {
 
     switchPage() {
         this.setLocalStorage();
-        window.location.href = './taskTemplate.html';
+        window.location.href = 'taskTemplate.html';
     }
 
     // set all needed values in local storage before switching to the next page (taskTemplate)
