@@ -47,6 +47,26 @@ module.exports = merge(common, {
                     'sass-loader'
                 ]
             },
+            {
+                test: /\.(png|jpe?g|gif)$/i,
+                loader: 'file-loader',
+                options: {
+                    name: 'img/[folder]/[name].[ext]',
+                    outputPath: (url, resourcePath, context) => {
+                        // `resourcePath` is original absolute path to asset
+                        // `context` is directory where stored asset (`rootContext`) or `context` option
+
+                        // To get relative path you can use
+                        // const relativePath = path.relative(context, resourcePath);
+
+                        if (/img\/img/.test(url)) {
+                            return url.replace(/img\/img/g, 'img');
+                        } else {
+                            return url;
+                        }
+                    },
+                }
+            }
         ]
     },
     plugins: [
