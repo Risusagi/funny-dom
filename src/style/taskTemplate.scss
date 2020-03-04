@@ -75,6 +75,10 @@ iframe {
     padding: 15px 10px;
     letter-spacing: 1px;
     margin-top: -6px;
+
+    // prevent menu from creaating additional space on smartphones
+    overflow-x: hidden;
+
     &::after {
         content: "";
         display: table;
