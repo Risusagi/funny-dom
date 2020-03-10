@@ -222,6 +222,11 @@ const app = {
         document.querySelectorAll('.hide').forEach(el => el.classList.remove('hide'));
     },
 
+    // handle rendering of tooltip with CodeMirror license informations
+    displayCodeMirrorCredits() {
+        document.querySelector('.credits').classList.toggle('visible');
+    },
+
     // add event listeners only when page rendered first time
     firstRender() {
         this.render(localStorage.getItem('currentChallenge'));
@@ -249,6 +254,8 @@ const app = {
 
         window.addEventListener('keydown', (e) => this.handleEscEvent(e));
         window.addEventListener('click', (e) => this.hideNavOnClick(e));
+
+        document.querySelector('.code-editor-container svg').addEventListener('click', () => this.displayCodeMirrorCredits());
     },
 
     render(taskToRender) {

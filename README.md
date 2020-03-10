@@ -31,7 +31,7 @@ Before I started this project I wanted to just create a list of tasks for myself
 * HTML
 * SCSS
 * Webpack 4
-* CodeMirror
+* [CodeMirror](https://codemirror.net/)
 
 ## Status
 Project is _finished_ at this moment. In the future I plan to add more challenges.

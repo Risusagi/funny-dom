@@ -237,6 +237,10 @@ button.close {
     height: calc(#{$height-to-redistribute} * 3);
 }
 
+// prevent code from collision with credits icon
+.CodeMirror-lines {
+    padding-right: 25px;
+}
 
 // TUTORIAL
 .hide {
@@ -270,6 +274,65 @@ button.close {
 }
 // TUTORIAL END
 
+.code-editor-container {
+    $size: 22px;
+    $space: 4px;
+
+    position: relative;
+
+    svg {
+        position: absolute;
+        z-index: 10;
+        top: $space;
+        right: $space;
+        width: $size;
+        height: $size;
+        stroke: white;
+        stroke-width: 1;
+        stroke-linecap: square;
+        stroke-linejoin: miter;
+        fill: none;
+        color: white;
+
+        cursor: pointer;
+
+        circle.inner {
+            fill: white;
+        }
+    }
+
+    .credits {
+        display: none;
+
+        position: absolute;
+        z-index: 10;
+        top: calc(#{$size} + #{$space});
+        right: calc(#{$size} + #{$space});
+
+        width: 280px;
+        height: 80px;
+        padding: 0 8px;
+
+        background-color: $panel-color;
+        color: $text-color;
+        border-radius: 5px;
+        font-size: 14px;
+
+        &.visible {
+            display: flex;
+            align-items: center;
+        }
+        
+        p {
+            line-height: 1.5;
+        }
+
+        a {
+            color: rgb(128, 128, 196);
+            text-decoration: none;
+        }
+    }
+}
 
 @media (min-width: 205px) {
     .run-code-btn,
